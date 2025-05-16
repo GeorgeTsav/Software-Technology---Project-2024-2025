@@ -13,7 +13,7 @@ _location = os.path.dirname(__file__)
 _debug = True
 
 class LoginScreen:
-    def __init__(self, top=None):
+    def __init__(self, top=None, root=None):
         top.geometry("600x450+468+138")
         top.minsize(120, 1)
         top.maxsize(1540, 845)
@@ -24,6 +24,7 @@ class LoginScreen:
         top.configure(highlightcolor="#000000")
 
         self.top = top
+        self.root = root
 
         # Configure grid for top window
         self.top.grid_rowconfigure(0, weight=1)
@@ -98,7 +99,7 @@ class LoginScreen:
         if db_cursor.fetchone() is not None:
             db_cursor.close()
             db.close()
-            MainMenuScreen.MainMenuScreen(tk.Toplevel(root), username).display(self.top)
+            MainMenuScreen.MainMenuScreen(tk.Toplevel(self.root), username).display(self.top)
         else:
             db_cursor.close()
             db.close()
@@ -107,12 +108,10 @@ class LoginScreen:
 
 
 if __name__ == '__main__':
-    global root
     root = tk.Tk()
     root.withdraw()  #Κρύβει το κύριο παράθυρο
-    root.protocol( 'WM_DELETE_WINDOW' , root.destroy)
-    global _top1, _w1
-    _top1 = tk.Toplevel(root)
-    _w1 = LoginScreen(_top1)
+    root.protocol('WM_DELETE_WINDOW', root.destroy)
+    top = tk.Toplevel(root)
+    window = LoginScreen(top, root)
     root.mainloop()
 

@@ -17,8 +17,9 @@ _tabbg1 = '#d9d9d9'
 _tabbg2 = 'gray40' 
 
 class MainMenuScreen:
-    def __init__(self, top=None, username=None):
+    def __init__(self, top=None, root=None, username=None):
         self.username = username
+        self.root = root
 
         top.geometry("693x474+429+128")
         top.minsize(120, 1)
@@ -125,12 +126,11 @@ class MainMenuScreen:
         self.top.deiconify()
 
 if __name__ == '__main__':
-    global root
     root = tk.Tk()
-    root.protocol( 'WM_DELETE_WINDOW' , root.destroy)
-    global _top1, _w1
-    _top1 = tk.Toplevel(root)
-    _w1 = MainMenuScreen(_top1)
+    root.withdraw()  #Κρύβει το κύριο παράθυρο
+    root.protocol('WM_DELETE_WINDOW', root.destroy)
+    top = tk.Toplevel(root)
+    window = MainMenuScreen(top, root)
     root.mainloop()
 
 
