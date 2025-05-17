@@ -15,6 +15,10 @@ class PersonalDiaryScreen:
         # Configure grid for scaling
         self.top.rowconfigure(1, weight=1)
         self.top.columnconfigure(0, weight=1)
+        self.top.geometry("693x474+429+128")
+        self.top.minsize(120, 1)
+        self.top.maxsize(1540, 845)
+        self.top.resizable(1,  1)
 
         # Label above the calendar
         self.title_label = tk.Label(self.top, text="My Personal Diary", font=("Segoe UI", 14, "bold"))
@@ -30,7 +34,7 @@ class PersonalDiaryScreen:
         self.calendar.grid(row=0, column=0, sticky="nsew")
 
         # Highlight days with entries
-        self.search_entries()
+        self.searchEntries()
         
         btn_frame = tk.Frame(self.top)
         btn_frame.grid(row=2, column=0, pady=(0, 10))
@@ -57,7 +61,7 @@ class PersonalDiaryScreen:
         self.back_btn.configure(highlightbackground="#d9d9d9")
         self.back_btn.configure(highlightcolor="#000000")
 
-    def search_entries(self):
+    def searchEntries(self): 
         db = DBManager.DBManager(database="petato_db")
         db.connect()
         db_cursor = db.execute_query("SELECT per_diary_date FROM personal_diary WHERE per_diary_user = %s", (self.username,))
@@ -78,9 +82,16 @@ class PersonalDiaryScreen:
                 pass
         self.calendar.tag_config('entry', background='lightgreen', foreground='black')
 
+    def updateDiary(self, date_str):
+        try:
+            self.calendar.calevent_create(datetime.strptime(date_str, "%Y-%m-%d"), 'Entry', 'entry')
+        except Exception:
+            pass
+        self.calendar.tag_config('entry', background='lightgreen', foreground='black')
+
     def open_text_screen(self):
         date = self.calendar.get_date()
-        pdts.PersonalDiaryTextScreen(tk.Toplevel(self.root), self.root, self.username, date)
+        pdts.PersonalDiaryTextScreen(tk.Toplevel(self.root), self.root, self.username, date, self)
 
     def go_back(self):
         pass

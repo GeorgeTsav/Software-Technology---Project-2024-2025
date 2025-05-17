@@ -4,22 +4,23 @@ import DBManager
 import MessageScreen
 
 class PersonalDiaryTextScreen:
-    def __init__(self, top=None, root=None, username=None, date=None):
+    def __init__(self, top=None, root=None, username=None, date=None, personal_diary_win=None):
         self.top = top
         self.root = root
         self.username = username
         self.date = date
+        self.personal_diary_win = personal_diary_win
         self.top.title(f"Diary Entry for {date}")
 
         self.text_area = tk.Text(top, width=50, height=15)
         self.text_area.pack(padx=10, pady=10)
 
         # Load entry from DB
-        entry = self.search_entries(username, date)
+        entry = self.searchEntry(username, date)
         if entry:
             self.text_area.insert(tk.END, entry)
 
-        self.save_btn = tk.Button(self.top, text="Save Entry", command=self.save_entry)
+        self.save_btn = tk.Button(self.top, text="Save Entry", command=self.saveEntry)
         self.save_btn.pack(pady=(0, 10))
         self.save_btn.configure(activebackground="#0080ff")
         self.save_btn.configure(activeforeground="black")
@@ -30,7 +31,7 @@ class PersonalDiaryTextScreen:
         self.save_btn.configure(highlightbackground="#d9d9d9")
         self.save_btn.configure(highlightcolor="#000000")
 
-    def search_entries(self, username, date):
+    def searchEntry(self, username, date):
         db = DBManager.DBManager(database="petato_db")
         db.connect()
         cursor = db.execute_query("SELECT per_diary_text FROM personal_diary WHERE per_diary_user = %s AND per_diary_date = %s", (username, date))
@@ -39,7 +40,7 @@ class PersonalDiaryTextScreen:
         db.close()
         return result[0] if result else ""
 
-    def save_entry(self):
+    def saveEntry(self):
         text = self.text_area.get("1.0", tk.END).strip()
         if self.checkText(text):
             self.updateDiary(self.username, self.date, text)
@@ -59,6 +60,8 @@ class PersonalDiaryTextScreen:
         )
         db.connection.commit()
         db.close()
+        self.personal_diary_win.updateDiary(date)
+
 
 if __name__ == "__main__":
     root = tk.Tk()
