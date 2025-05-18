@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 16, 2025 at 06:46 PM
+-- Generation Time: May 18, 2025 at 04:00 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -31,6 +31,7 @@ CREATE TABLE `announcements` (
   `ann_id` int(11) NOT NULL,
   `ann_title` varchar(40) NOT NULL,
   `ann_type` enum('ADOPTION','HOST','','') NOT NULL,
+  `ann_pet` enum('CAT','DOG') NOT NULL,
   `adopt_description` varchar(150) DEFAULT NULL,
   `host_start_date` date DEFAULT NULL,
   `host_end_date` date DEFAULT NULL,
@@ -125,6 +126,17 @@ CREATE TABLE `personal_diary` (
   `per_diary_user` varchar(20) NOT NULL DEFAULT 'unknown',
   `per_diary_text` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `personal_diary`
+--
+
+INSERT INTO `personal_diary` (`per_diary_date`, `per_diary_user`, `per_diary_text`) VALUES
+('2025-05-01', 'george_tsavos', 'Test'),
+('2025-05-08', 'george_tsavos', 'PAME LIGO'),
+('2025-05-14', 'george_tsavos', ''),
+('2025-05-15', 'george_tsavos', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
+('2025-05-16', 'george_tsavos', '!!!');
 
 -- --------------------------------------------------------
 
