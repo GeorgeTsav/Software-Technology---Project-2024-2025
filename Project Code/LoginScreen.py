@@ -99,7 +99,9 @@ class LoginScreen:
         if db_cursor.fetchone() is not None:
             db_cursor.close()
             db.close()
-            MainMenuScreen.MainMenuScreen(tk.Toplevel(self.root), username).display(self.top)
+            new_top = tk.Toplevel(self.root)
+            new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
+            MainMenuScreen.MainMenuScreen(new_top, self.root, username)
         else:
             db_cursor.close()
             db.close()
@@ -110,8 +112,8 @@ class LoginScreen:
 if __name__ == '__main__':
     root = tk.Tk()
     root.withdraw()  #Κρύβει το κύριο παράθυρο
-    root.protocol('WM_DELETE_WINDOW', root.destroy)
     top = tk.Toplevel(root)
+    top.protocol('WM_DELETE_WINDOW', root.destroy)
     window = LoginScreen(top, root)
     root.mainloop()
 

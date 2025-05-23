@@ -128,8 +128,8 @@ class MainMenuScreen:
 if __name__ == '__main__':
     root = tk.Tk()
     root.withdraw()  #Κρύβει το κύριο παράθυρο
-    root.protocol('WM_DELETE_WINDOW', root.destroy)
     top = tk.Toplevel(root)
+    top.protocol('WM_DELETE_WINDOW', root.destroy)
     window = MainMenuScreen(top, root)
     root.mainloop()
 
