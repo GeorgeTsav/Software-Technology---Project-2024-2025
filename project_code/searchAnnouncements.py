@@ -35,22 +35,22 @@ class AnnouncementsScreen:
         self.che52 = tk.IntVar()
         self.che53 = tk.IntVar()
 
-        # === Main layout frame ===
+        
         self.main_frame = tk.Frame(self.top, bg=_bgcolor)
         self.main_frame.pack(fill="both", expand=True)
         self.main_frame.columnconfigure(0, weight=1)
         self.main_frame.columnconfigure(1, weight=3)
         self.main_frame.rowconfigure(0, weight=1)
 
-        # === Αριστερό πάνελ (φίλτρα + ημερολόγιο + κουμπί) ===
+        
         self.left_panel = tk.Frame(self.main_frame, bg=_bgcolor, bd=2, relief="groove")
         self.left_panel.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
 
-        # === Δεξί πάνελ (αποτελέσματα) ===
+        
         self.ResultFrame = tk.Frame(self.main_frame, bg=_bgcolor, bd=2, relief="groove")
         self.ResultFrame.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
 
-        # === Φίλτρα ===
+        
         self.selectlabel = tk.Label(self.left_panel, text="SELECT", bg="#0000ff", fg="white",
                                     font="-family {Segoe UI} -size 9 -weight bold")
         self.selectlabel.pack(pady=(10, 5), anchor="w", padx=10)
@@ -64,7 +64,7 @@ class AnnouncementsScreen:
         self.hospitality = tk.Checkbutton(self.left_panel, text="HOSPITALITY", variable=self.che53, bg=_bgcolor, anchor="w")
         self.hospitality.pack(anchor="w", padx=10)
 
-        # === Ημερομηνίες ===
+        
         tk.Label(self.left_panel, text="From Date:", bg=_bgcolor).pack(anchor="w", padx=10, pady=(10, 0))
         self.from_date_entry = tk.Entry(self.left_panel)
         self.from_date_entry.pack(anchor="w", padx=10)
@@ -73,16 +73,16 @@ class AnnouncementsScreen:
         self.to_date_entry = tk.Entry(self.left_panel)
         self.to_date_entry.pack(anchor="w", padx=10)
 
-        # === Ημερολόγιο ===
+        
         self.calendar = Calendar(self.left_panel, selectmode='day', date_pattern='yyyy-mm-dd')
         self.calendar.pack(padx=10, pady=10, fill="x")
 
-        # === Search Button ===
+        
         self.SearchButton = tk.Button(self.left_panel, text="SEARCH", bg="#0000ff", fg="white",
                                       font="-family {Segoe UI} -size 9", command=self.search_announcements)
         self.SearchButton.pack(pady=(10, 20), padx=10, fill="x")
 
-        # === Event bindings ===
+        
         self.active_date_field = None
         self.from_date_entry.bind("<FocusIn>", lambda e: self.set_active_date_field(self.from_date_entry))
         self.to_date_entry.bind("<FocusIn>", lambda e: self.set_active_date_field(self.to_date_entry))
