@@ -32,7 +32,7 @@ class MyAnnouncementWidget(tk.Frame):
         tk.Button(self, text="Interested", activebackground="#0080ff", command=self.openInterested).pack(side=tk.LEFT, padx=10)
 
     def openInterested(self):
-        pass
+        IntrestedScreen.InterestedScreen(tk.Toplevel(), self.ann_id)
 
     def showDetails(self):
         pass
@@ -61,7 +61,7 @@ class MyAnnouncementsScreen:
             highlightbackground="#d9d9d9",
             highlightcolor="#000000"
         )
-        self.MyAnnouncementsFrame.place(relx=0.033, rely=0.178, relheight=0.767, relwidth=0.942)
+        self.MyAnnouncementsFrame.place(relx=0.033, rely=0.178, relheight=0.7, relwidth=0.942)
 
         self.MyAnnouncementsList = tk.Canvas(
             self.MyAnnouncementsFrame,
@@ -103,6 +103,13 @@ class MyAnnouncementsScreen:
             text='''My Announcements'''
         )
         self.MyAnnouncementsLabel.place(relx=0.283, rely=0.044, height=41, width=284)
+
+        self.BackButton = tk.Button(
+            self.top,
+            text="Back",
+            activebackground="#0080ff"
+        )
+        self.BackButton.place(relx=0.5, rely=0.93, anchor=tk.CENTER, height=30, width=80)
 
         self.searchAnnouncements()
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 18, 2025 at 04:00 PM
+-- Generation Time: May 23, 2025 at 03:58 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -38,6 +38,14 @@ CREATE TABLE `announcements` (
   `ann_user` varchar(20) NOT NULL DEFAULT 'unknown',
   `ann_date` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `announcements`
+--
+
+INSERT INTO `announcements` (`ann_id`, `ann_title`, `ann_type`, `ann_pet`, `adopt_description`, `host_start_date`, `host_end_date`, `ann_user`, `ann_date`) VALUES
+(1, 'Dog Adoption!', 'ADOPTION', 'DOG', 'Beautifull Little Dog!', NULL, NULL, 'george_tsavos', '2025-05-23 11:04:03'),
+(2, 'Cat Hosting', 'HOST', 'CAT', 'I can host cats only because i am alergic to dogs :).', '2025-05-31', '2025-06-18', 'george_tsavos', '2025-05-23 11:05:11');
 
 -- --------------------------------------------------------
 
@@ -89,6 +97,13 @@ CREATE TABLE `interested_users` (
   `int_ann` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `interested_users`
+--
+
+INSERT INTO `interested_users` (`int_user`, `int_ann`) VALUES
+('george_tsavos', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -132,11 +147,14 @@ CREATE TABLE `personal_diary` (
 --
 
 INSERT INTO `personal_diary` (`per_diary_date`, `per_diary_user`, `per_diary_text`) VALUES
-('2025-05-01', 'george_tsavos', 'Test'),
+('2025-04-10', 'george_tsavos', 'ssfsfs'),
+('2025-05-01', 'george_tsavos', ''),
+('2025-05-05', 'george_tsavos', 'znbnzm'),
 ('2025-05-08', 'george_tsavos', 'PAME LIGO'),
 ('2025-05-14', 'george_tsavos', ''),
-('2025-05-15', 'george_tsavos', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
-('2025-05-16', 'george_tsavos', '!!!');
+('2025-05-15', 'george_tsavos', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
+('2025-05-16', 'george_tsavos', '!!!'),
+('2025-05-27', 'george_tsavos', 'adadadad');
 
 -- --------------------------------------------------------
 
@@ -224,7 +242,7 @@ ALTER TABLE `eshop_payments`
 -- Indexes for table `interested_users`
 --
 ALTER TABLE `interested_users`
-  ADD KEY `int_user` (`int_user`),
+  ADD PRIMARY KEY (`int_user`,`int_ann`),
   ADD KEY `int_ann` (`int_ann`);
 
 --
@@ -278,7 +296,7 @@ ALTER TABLE `vet`
 -- AUTO_INCREMENT for table `announcements`
 --
 ALTER TABLE `announcements`
-  MODIFY `ann_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ann_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `appointments`
