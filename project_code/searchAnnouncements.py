@@ -35,22 +35,18 @@ class AnnouncementsScreen:
         self.che52 = tk.IntVar()
         self.che53 = tk.IntVar()
 
-        # === Main layout frame ===
         self.main_frame = tk.Frame(self.top, bg=_bgcolor)
         self.main_frame.pack(fill="both", expand=True)
         self.main_frame.columnconfigure(0, weight=1)
         self.main_frame.columnconfigure(1, weight=3)
         self.main_frame.rowconfigure(0, weight=1)
 
-        # === Αριστερό πάνελ (φίλτρα + ημερολόγιο + κουμπί) ===
         self.left_panel = tk.Frame(self.main_frame, bg=_bgcolor, bd=2, relief="groove")
         self.left_panel.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
 
-        # === Δεξί πάνελ (αποτελέσματα) ===
         self.ResultFrame = tk.Frame(self.main_frame, bg=_bgcolor, bd=2, relief="groove")
         self.ResultFrame.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
 
-        # === Φίλτρα ===
         self.selectlabel = tk.Label(self.left_panel, text="SELECT", bg="#0000ff", fg="white",
                                     font="-family {Segoe UI} -size 9 -weight bold")
         self.selectlabel.pack(pady=(10, 5), anchor="w", padx=10)
@@ -64,7 +60,6 @@ class AnnouncementsScreen:
         self.hospitality = tk.Checkbutton(self.left_panel, text="HOSPITALITY", variable=self.che53, bg=_bgcolor, anchor="w")
         self.hospitality.pack(anchor="w", padx=10)
 
-        # === Ημερομηνίες ===
         tk.Label(self.left_panel, text="From Date:", bg=_bgcolor).pack(anchor="w", padx=10, pady=(10, 0))
         self.from_date_entry = tk.Entry(self.left_panel)
         self.from_date_entry.pack(anchor="w", padx=10)
@@ -73,16 +68,13 @@ class AnnouncementsScreen:
         self.to_date_entry = tk.Entry(self.left_panel)
         self.to_date_entry.pack(anchor="w", padx=10)
 
-        # === Ημερολόγιο ===
         self.calendar = Calendar(self.left_panel, selectmode='day', date_pattern='yyyy-mm-dd')
         self.calendar.pack(padx=10, pady=10, fill="x")
 
-        # === Search Button ===
         self.SearchButton = tk.Button(self.left_panel, text="SEARCH", bg="#0000ff", fg="white",
                                       font="-family {Segoe UI} -size 9", command=self.search_announcements)
         self.SearchButton.pack(pady=(10, 20), padx=10, fill="x")
 
-        # === Event bindings ===
         self.active_date_field = None
         self.from_date_entry.bind("<FocusIn>", lambda e: self.set_active_date_field(self.from_date_entry))
         self.to_date_entry.bind("<FocusIn>", lambda e: self.set_active_date_field(self.to_date_entry))
@@ -102,6 +94,19 @@ class AnnouncementsScreen:
             self.active_date_field.delete(0, tk.END)
             self.active_date_field.insert(0, selected_date)
 
+    def mark_interested(self, ann_id):
+       
+
+        db = DBManager.DBManager(database='petato_db')
+        db.connect()
+        
+        query = "INSERT INTO interested_users (int_ann, int_user) VALUES (%s, %s)"
+        db_cursor=db.execute_query(query, (ann_id, self.username))
+            
+
+        db.cursor.close()
+        db.close()
+
     def search_announcements(self):
         pet_filters = []
         type_filters = []
@@ -115,11 +120,13 @@ class AnnouncementsScreen:
         if self.che52.get() == 1:
             type_filters.append('ADOPTION')
         if self.che53.get() == 1:
-            type_filters.append('HOSPITALITY')
+            type_filters.append('HOST')
 
         db = DBManager.DBManager(database='petato_db')
         db.connect()
-        query = "SELECT ann_title, ann_date, adopt_description FROM announcements WHERE 1=1"
+        
+        query = "SELECT ann_id, ann_title, ann_date, ann_type, adopt_description, host_start_date, host_end_date FROM announcements WHERE 1=1"
+        
         params = []
         if pet_filters:
             placeholders = ",".join(["%s"] * len(pet_filters))
@@ -151,11 +158,12 @@ class AnnouncementsScreen:
         canvas.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
-        for idx, (title, date, description) in enumerate(results):
+        for idx, (ann_id, title, date, ann_type, adopt_description, host_start_date, host_end_date) in enumerate(results):
             container = tk.Frame(scroll_frame, bg="#ffffff", bd=1, relief="solid", padx=10, pady=10)
             container.grid(row=idx, column=0, sticky='ew', pady=5, padx=5)
             container.grid_columnconfigure(0, weight=1)
             container.grid_columnconfigure(1, weight=0)
+            container.grid_columnconfigure(2, weight=0)
 
             title_label = tk.Label(container, text=title, font=("Segoe UI", 10, "bold"), anchor='w', bg="#ffffff")
             title_label.grid(row=0, column=0, sticky='ew', padx=(20, 0))
@@ -163,8 +171,21 @@ class AnnouncementsScreen:
             date_label = tk.Label(container, text=str(date), font=("Segoe UI", 9), anchor='e', bg="#ffffff")
             date_label.grid(row=0, column=1, sticky='e', padx=(10, 10))
 
+            
+            star_button = tk.Button(container, text="★", font=("Segoe UI", 14), fg="gold", bg="#ffffff", bd=0,
+                                    activebackground="#ffffff",
+                                    command=lambda ann_id=ann_id: self.mark_interested(ann_id))
+            star_button.grid(row=0, column=2, sticky='e', padx=(0,10))
+
+            if ann_type == 'ADOPTION':
+                description = adopt_description or "Δεν υπάρχει περιγραφή."
+            elif ann_type == 'HOST':
+                description = f"Host start date: {host_start_date} Host end date: {host_end_date}"
+            else:
+                description = ""
+
             desc_label = tk.Label(container, text=description, wraplength=520, justify='left', bg="#ffffff", font=("Segoe UI", 9))
-            desc_label.grid(row=1, column=0, columnspan=2, sticky='w', pady=(8, 0))
+            desc_label.grid(row=1, column=0, columnspan=3, sticky='w', pady=(8, 0))
 
         db_cursor.close()
         db.close()
