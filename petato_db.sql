@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 23, 2025 at 03:58 PM
+-- Generation Time: May 24, 2025 at 10:06 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -45,7 +45,8 @@ CREATE TABLE `announcements` (
 
 INSERT INTO `announcements` (`ann_id`, `ann_title`, `ann_type`, `ann_pet`, `adopt_description`, `host_start_date`, `host_end_date`, `ann_user`, `ann_date`) VALUES
 (1, 'Dog Adoption!', 'ADOPTION', 'DOG', 'Beautifull Little Dog!', NULL, NULL, 'george_tsavos', '2025-05-23 11:04:03'),
-(2, 'Cat Hosting', 'HOST', 'CAT', 'I can host cats only because i am alergic to dogs :).', '2025-05-31', '2025-06-18', 'george_tsavos', '2025-05-23 11:05:11');
+(2, 'Cat Hosting', 'HOST', 'CAT', 'I can host cats only because i am alergic to dogs :).', '2025-05-31', '2025-06-18', 'george_tsavos', '2025-05-23 11:05:11'),
+(3, 'Cat Adoption', 'ADOPTION', 'CAT', 'CATTTTTTt', NULL, NULL, 'george_tsavos', '2025-05-24 10:49:25');
 
 -- --------------------------------------------------------
 
@@ -102,7 +103,9 @@ CREATE TABLE `interested_users` (
 --
 
 INSERT INTO `interested_users` (`int_user`, `int_ann`) VALUES
-('george_tsavos', 1);
+('giwrgos1', 3),
+('giwrgos2', 1),
+('giwrgos2', 2);
 
 -- --------------------------------------------------------
 
@@ -117,6 +120,13 @@ CREATE TABLE `messages` (
   `msg_receiver` varchar(20) NOT NULL DEFAULT 'unknown',
   `msg_text` varchar(150) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `messages`
+--
+
+INSERT INTO `messages` (`msg_id`, `msg_date`, `msg_sender`, `msg_receiver`, `msg_text`) VALUES
+(2, '2025-05-24 11:05:28', 'System', 'giwrgos2', 'You have been approved by the owner of the announcement 1.');
 
 -- --------------------------------------------------------
 
@@ -190,7 +200,10 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`username`, `name`, `last_name`, `telephone`, `password`) VALUES
-('george_tsavos', 'George', 'Tsavos', '6969696969', '1084606');
+('george_tsavos', 'George', 'Tsavos', '6969696969', '1084606'),
+('giwrgos1', 'George', 'Tsav', '6969696969', '1084606'),
+('giwrgos2', 'George', 'Tsava', '6969696969', '1084606'),
+('SYSTEM', 'unknown', 'unknown', 'unknown', 'unknown');
 
 -- --------------------------------------------------------
 
@@ -279,8 +292,7 @@ ALTER TABLE `review`
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`username`),
-  ADD UNIQUE KEY `password` (`password`);
+  ADD PRIMARY KEY (`username`);
 
 --
 -- Indexes for table `vet`
@@ -296,7 +308,7 @@ ALTER TABLE `vet`
 -- AUTO_INCREMENT for table `announcements`
 --
 ALTER TABLE `announcements`
-  MODIFY `ann_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `ann_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `appointments`
@@ -314,7 +326,7 @@ ALTER TABLE `eshop_payments`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `msg_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `msg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `review`
@@ -355,7 +367,7 @@ ALTER TABLE `eshop_payments`
 -- Constraints for table `interested_users`
 --
 ALTER TABLE `interested_users`
-  ADD CONSTRAINT `int_ann` FOREIGN KEY (`int_ann`) REFERENCES `announcements` (`ann_id`),
+  ADD CONSTRAINT `int_ann` FOREIGN KEY (`int_ann`) REFERENCES `announcements` (`ann_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `int_user` FOREIGN KEY (`int_user`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
