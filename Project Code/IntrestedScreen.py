@@ -20,61 +20,6 @@ _tabbg1 = '#d9d9d9'
 _tabbg2 = 'gray40' 
 
 
-class InterestedWidget(tk.Frame):
-    def __init__(self, top, int_user, ann_id, *args, **kwargs):
-        super().__init__(top, *args, **kwargs)
-
-        self.int_user = int_user
-        self.ann_id = ann_id
-
-        self.configure(bg="#ffffff", relief="ridge", bd=1)
-        tk.Label(self, text=self.int_user, font=("Segoe UI", 12, "bold"), bg="#ffffff").pack(side=tk.LEFT, padx=10)
-        tk.Button(self, text="Profile", activebackground="#0080ff", command=self.openProfile).pack(side=tk.LEFT, padx=10)
-        tk.Button(self, text="Approve", background="#5FD363", activebackground="#0080ff", command=self.approveInterested).pack(side=tk.LEFT, padx=10)
-        tk.Button(self, text="Ignore", background="#ff1d1d", activebackground="#0080ff", command=self.ignoreInterested).pack(side=tk.LEFT, padx=10)
-
-    def approveInterested(self):
-        SendMessage.SendMessage(
-            message=f"You have been approved by the owner of the announcement {self.ann_id}.",
-            receiver=self.int_user
-        ).sendMsg()
-
-        self.deleteAnn()
-
-        self.destroy()
-
-    def deleteAnn(self):
-        db = DBManager.DBManager(database="petato_db")
-        db.connect()
-
-        db.execute_query(
-            "DELETE FROM announcements WHERE ann_id = %s", 
-            (self.ann_id,)
-        )
-        db.connection.commit()
-        
-        db.close()
-
-    def ignoreInterested(self):
-        db = DBManager.DBManager(database="petato_db")
-        db.connect()
-
-        db.execute_query(
-            "DELETE FROM interested_users WHERE int_user = %s AND int_ann = %s", 
-            (self.username, self.ann_id)
-        )
-        db.connection.commit()
-        
-        db.close()
-
-        SendMessage.SendMessage(f"You have been ignored by the owner of the announcement {self.ann_id}.", self.username).sendMsg()
-
-        self.destroy()
-    
-    def openProfile(self):
-        pass
-
-
 class InterestedScreen:
     def __init__(self, top=None, ann_id=None):
         self.ann_id = ann_id
@@ -125,6 +70,60 @@ class InterestedScreen:
 
         self.searchInterested()
     
+    class InterestedWidget(tk.Frame):
+        def __init__(self, top, int_user, ann_id, *args, **kwargs):
+            super().__init__(top, *args, **kwargs)
+
+            self.int_user = int_user
+            self.ann_id = ann_id
+
+            self.configure(bg="#ffffff", relief="ridge", bd=1)
+            tk.Label(self, text=self.int_user, font=("Segoe UI", 12, "bold"), bg="#ffffff").pack(side=tk.LEFT, padx=10)
+            tk.Button(self, text="Profile", activebackground="#0080ff", command=self.openProfile).pack(side=tk.LEFT, padx=10)
+            tk.Button(self, text="Approve", background="#5FD363", activebackground="#0080ff", command=self.approveInterested).pack(side=tk.LEFT, padx=10)
+            tk.Button(self, text="Ignore", background="#ff1d1d", activebackground="#0080ff", command=self.ignoreInterested).pack(side=tk.LEFT, padx=10)
+
+        def approveInterested(self):
+            SendMessage.SendMessage(
+                message=f"You have been approved by the owner of the announcement {self.ann_id}.",
+                receiver=self.int_user
+            ).sendMsg()
+
+            self.deleteAnn()
+
+            self.destroy()
+
+        def deleteAnn(self):
+            db = DBManager.DBManager(database="petato_db")
+            db.connect()
+
+            db.execute_query(
+                "DELETE FROM announcements WHERE ann_id = %s", 
+                (self.ann_id,)
+            )
+            db.connection.commit()
+            
+            db.close()
+
+        def ignoreInterested(self):
+            db = DBManager.DBManager(database="petato_db")
+            db.connect()
+
+            db.execute_query(
+                "DELETE FROM interested_users WHERE int_user = %s AND int_ann = %s", 
+                (self.username, self.ann_id)
+            )
+            db.connection.commit()
+            
+            db.close()
+
+            SendMessage.SendMessage(f"You have been ignored by the owner of the announcement {self.ann_id}.", self.username).sendMsg()
+
+            self.destroy()
+        
+        def openProfile(self):
+            pass
+
     def searchInterested(self):
         # Καθαρίζει το frame της λίστας από προηγούμενα widgets
         for widget in self.list_frame.winfo_children():
@@ -139,7 +138,7 @@ class InterestedScreen:
         # Δημιουργεί ένα MyAnnouncementWidget για κάθε ανακοίνωση
         if results:
             for int_user in results:
-                widget = InterestedWidget(self.list_frame, int_user[0], self.ann_id)
+                widget = self.InterestedWidget(self.list_frame, int_user[0], self.ann_id)
                 widget.pack(fill=tk.X, pady=4, padx=4)
             
             db_cursor.close()

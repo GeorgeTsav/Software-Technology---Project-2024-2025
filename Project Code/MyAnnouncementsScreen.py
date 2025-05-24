@@ -19,24 +19,6 @@ _bgmode = 'light'
 _tabbg1 = '#d9d9d9' 
 _tabbg2 = 'gray40' 
 
-class MyAnnouncementWidget(tk.Frame):
-    def __init__(self, master, ann_title, ann_id, *args, **kwargs):
-        super().__init__(master, *args, **kwargs)
-
-        self.ann_id = ann_id
-        self.ann_title = ann_title
-
-        self.configure(bg="#ffffff", relief="ridge", bd=1)
-        tk.Label(self, text=ann_title, font=("Segoe UI", 12, "bold"), bg="#ffffff").pack(side=tk.LEFT, padx=10)
-        tk.Button(self, text="Details", activebackground="#0080ff", command=self.showDetails).pack(side=tk.LEFT, padx=10)
-        tk.Button(self, text="Interested", activebackground="#0080ff", command=self.openInterested).pack(side=tk.LEFT, padx=10)
-
-    def openInterested(self):
-        IntrestedScreen.InterestedScreen(tk.Toplevel(), self.ann_id)
-
-    def showDetails(self):
-        pass
-
 
 class MyAnnouncementsScreen:
     def __init__(self, top=None, root=None, username=None):
@@ -113,6 +95,25 @@ class MyAnnouncementsScreen:
 
         self.searchAnnouncements()
 
+    class MyAnnouncementWidget(tk.Frame):
+        def __init__(self, master, ann_title, ann_id, *args, **kwargs):
+            super().__init__(master, *args, **kwargs)
+
+            self.ann_id = ann_id
+            self.ann_title = ann_title
+
+            self.configure(bg="#ffffff", relief="ridge", bd=1)
+            tk.Label(self, text=ann_title, font=("Segoe UI", 12, "bold"), bg="#ffffff").pack(side=tk.LEFT, padx=10)
+            tk.Button(self, text="Details", activebackground="#0080ff", command=self.showDetails).pack(side=tk.LEFT, padx=10)
+            tk.Button(self, text="Interested", activebackground="#0080ff", command=self.openInterested).pack(side=tk.LEFT, padx=10)
+
+        def openInterested(self):
+            IntrestedScreen.InterestedScreen(tk.Toplevel(), self.ann_id)
+
+        def showDetails(self):
+            pass
+
+
     #Σβήνει το προηγούμενο παράθυρο και εμφανίζει το νέο
     def display(self, previous_window=None):
         if previous_window is not None:
@@ -133,7 +134,7 @@ class MyAnnouncementsScreen:
         # Δημιουργεί ένα MyAnnouncementWidget για κάθε ανακοίνωση
         if results:
             for ann in results:
-                widget = MyAnnouncementWidget(self.list_frame, ann[1], ann[0])
+                widget = self.MyAnnouncementWidget(self.list_frame, ann[1], ann[0])
                 widget.pack(fill=tk.X, pady=4, padx=4)
             
             db_cursor.close()
@@ -146,6 +147,7 @@ class MyAnnouncementsScreen:
 
         # Ενημερώνει το frame της λίστας για να εμφανίσει τα νέα widgets
         self.list_frame.update_idletasks()
+
 
 if __name__ == '__main__':
     root = tk.Tk()
