@@ -6,6 +6,7 @@ from tkcalendar import Calendar
 from datetime import datetime
 import os.path
 import DBManager
+import MessageScreen
 
 _location = os.path.dirname(__file__)
 _debug = True
@@ -95,17 +96,18 @@ class AnnouncementsScreen:
             self.active_date_field.insert(0, selected_date)
 
     def mark_interested(self, ann_id):
-       
-
         db = DBManager.DBManager(database='petato_db')
         db.connect()
-        
-        query = "INSERT INTO interested_users (int_ann, int_user) VALUES (%s, %s)"
-        db_cursor=db.execute_query(query, (ann_id, self.username))
-            
-
-        db.cursor.close()
-        db.close()
+        try:
+            query = "INSERT INTO interested_users (int_an, int_user) VALUES (%s, %s)"
+            cursor = db.connection.cursor()
+            cursor.execute(query, (ann_id, self.username))
+            db.connection.commit()
+        except Exception as e:
+            print("Error inserting interest:", e)
+        finally:
+            cursor.close()
+            db.close()
 
     def search_announcements(self):
         pet_filters = []
@@ -124,9 +126,8 @@ class AnnouncementsScreen:
 
         db = DBManager.DBManager(database='petato_db')
         db.connect()
-        
+
         query = "SELECT ann_id, ann_title, ann_date, ann_type, adopt_description, host_start_date, host_end_date FROM announcements WHERE 1=1"
-        
         params = []
         if pet_filters:
             placeholders = ",".join(["%s"] * len(pet_filters))
@@ -146,49 +147,66 @@ class AnnouncementsScreen:
         for widget in self.ResultFrame.winfo_children():
             widget.destroy()
 
-        canvas = tk.Canvas(self.ResultFrame, background="#f0f0f0")
-        scrollbar = ttk.Scrollbar(self.ResultFrame, orient="vertical", command=canvas.yview)
-        scroll_frame = tk.Frame(canvas, background="#f0f0f0")
+        if results:
+            canvas = tk.Canvas(self.ResultFrame, background="#f0f0f0")
+            scrollbar = ttk.Scrollbar(self.ResultFrame, orient="vertical", command=canvas.yview)
+            scroll_frame = tk.Frame(canvas, background="#f0f0f0")
+            scroll_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+            canvas.create_window((0, 0), window=scroll_frame, anchor='nw')
+            canvas.configure(yscrollcommand=scrollbar.set)
+            canvas.pack(side="left", fill="both", expand=True)
+            scrollbar.pack(side="right", fill="y")
 
-        scroll_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+            for idx, (ann_id, title, date, ann_type, adopt_description, host_start_date, host_end_date) in enumerate(results):
+                container = tk.Frame(scroll_frame, bg="#ffffff", bd=1, relief="solid", padx=10, pady=10)
+                container.grid(row=idx, column=0, sticky='ew', pady=5, padx=5)
+                container.grid_columnconfigure(0, weight=1)
+                container.grid_columnconfigure(1, weight=0)
+                container.grid_columnconfigure(2, weight=0)
 
-        canvas.create_window((0, 0), window=scroll_frame, anchor='nw')
-        canvas.configure(yscrollcommand=scrollbar.set)
+                title_label = tk.Label(container, text=title, font=("Segoe UI", 10, "bold"), anchor='w', bg="#ffffff")
+                title_label.grid(row=0, column=0, sticky='ew', padx=(20, 0))
 
-        canvas.pack(side="left", fill="both", expand=True)
-        scrollbar.pack(side="right", fill="y")
+                date_label = tk.Label(container, text=str(date), font=("Segoe UI", 9), anchor='e', bg="#ffffff")
+                date_label.grid(row=0, column=1, sticky='e', padx=(10, 10))
 
-        for idx, (ann_id, title, date, ann_type, adopt_description, host_start_date, host_end_date) in enumerate(results):
-            container = tk.Frame(scroll_frame, bg="#ffffff", bd=1, relief="solid", padx=10, pady=10)
-            container.grid(row=idx, column=0, sticky='ew', pady=5, padx=5)
-            container.grid_columnconfigure(0, weight=1)
-            container.grid_columnconfigure(1, weight=0)
-            container.grid_columnconfigure(2, weight=0)
+                star_button = tk.Button(container, text="★", font=("Segoe UI", 14), fg="gold", bg="#ffffff", bd=0,
+                                        activebackground="#ffffff",
+                                        command=lambda ann_id=ann_id: self.mark_interested(ann_id))
+                star_button.grid(row=0, column=2, sticky='e', padx=(0, 10))
 
-            title_label = tk.Label(container, text=title, font=("Segoe UI", 10, "bold"), anchor='w', bg="#ffffff")
-            title_label.grid(row=0, column=0, sticky='ew', padx=(20, 0))
+                if ann_type == 'ADOPTION':
+                    description = adopt_description 
+                elif ann_type == 'HOST':
+                    description = f"Host start date: {host_start_date} Host end date: {host_end_date}"
 
-            date_label = tk.Label(container, text=str(date), font=("Segoe UI", 9), anchor='e', bg="#ffffff")
-            date_label.grid(row=0, column=1, sticky='e', padx=(10, 10))
+                desc_label = tk.Label(container, text=description, wraplength=520, justify='left', bg="#ffffff",
+                                      font=("Segoe UI", 9))
+                desc_label.grid(row=1, column=0, columnspan=3, sticky='w', pady=(8, 0))
+                desc_label.grid_remove()
 
-            
-            star_button = tk.Button(container, text="★", font=("Segoe UI", 14), fg="gold", bg="#ffffff", bd=0,
-                                    activebackground="#ffffff",
-                                    command=lambda ann_id=ann_id: self.mark_interested(ann_id))
-            star_button.grid(row=0, column=2, sticky='e', padx=(0,10))
+                toggle_button = tk.Button(
+                    container, text="More...", font=("Segoe UI", 9, "italic"),
+                    bg="#ffffff", bd=0, fg="blue", cursor="hand2"
+                )
+                toggle_button.grid(row=2, column=0, columnspan=3, sticky="w", pady=(5, 0), padx=(20, 0))
 
-            if ann_type == 'ADOPTION':
-                description = adopt_description or "Δεν υπάρχει περιγραφή."
-            elif ann_type == 'HOST':
-                description = f"Host start date: {host_start_date} Host end date: {host_end_date}"
-            else:
-                description = ""
+                def toggle_description(label=desc_label, button=toggle_button):
+                    if label.winfo_viewable():
+                        label.grid_remove()
+                        button.config(text="More...")
+                    else:
+                        label.grid()
+                        button.config(text="Less...")
 
-            desc_label = tk.Label(container, text=description, wraplength=520, justify='left', bg="#ffffff", font=("Segoe UI", 9))
-            desc_label.grid(row=1, column=0, columnspan=3, sticky='w', pady=(8, 0))
+                toggle_button.config(command=toggle_description)
 
-        db_cursor.close()
-        db.close()
+            db_cursor.close()
+            db.close()
+        else:
+            db_cursor.close()
+            db.close()
+            MessageScreen.MessageScreen.display("There is no announcements", "There is no announcements")
 
 if __name__ == '__main__':
     root = tk.Tk()
