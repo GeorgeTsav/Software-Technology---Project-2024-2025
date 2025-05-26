@@ -31,6 +31,9 @@ class AnnouncementsScreen:
         top.maxsize(1600, 900)
         top.title("Petato")
         top.configure(background=_bgcolor)
+        
+        self.title_label = tk.Label(top, text="Announcements", font=("Segoe UI", 20, "bold"), bg=_bgcolor, fg="black")
+        self.title_label.pack(side="top", pady=10)
 
         self.top = top
         self.che50 = tk.IntVar()
