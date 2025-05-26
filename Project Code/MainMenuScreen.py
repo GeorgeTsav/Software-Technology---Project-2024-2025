@@ -5,6 +5,9 @@ from tkinter.constants import *
 from PIL import Image, ImageTk
 import os.path
 
+import MyProfile
+import AnnouncementsScreen
+
 _location = os.path.dirname(__file__)
 _debug = True
 
@@ -66,6 +69,7 @@ class MainMenuScreen:
         self.AnnouncementsButton.configure(highlightbackground="#d9d9d9")
         self.AnnouncementsButton.configure(highlightcolor="#000000")
         self.AnnouncementsButton.configure(text='''Announcements''')
+        self.AnnouncementsButton.configure(command=self.openAnnouncementsScreen)
 
         self.eshopButton = tk.Button(self.MenuBarFrame)
         self.eshopButton.place(relx=0.843, rely=0.295, height=26, width=47)
@@ -90,6 +94,7 @@ class MainMenuScreen:
         self.MyProfileButton.configure(highlightbackground="#d9d9d9")
         self.MyProfileButton.configure(highlightcolor="#000000")
         self.MyProfileButton.configure(text='''My Profile''')
+        self.MyProfileButton.configure(command=self.openMyProfile)
 
         self.AppLogoFrame = tk.Frame(self.top)
         self.AppLogoFrame.place(relx=0.014, rely=0.232, relheight=0.728
@@ -118,6 +123,16 @@ class MainMenuScreen:
         self.AppLogo.configure(image=_img0)
         self.AppLogo.configure(justify='center')
         self.AppLogo.pack(expand=True, anchor='center')
+
+    def openMyProfile(self):
+        new_top = tk.Toplevel(self.root)
+        new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
+        MyProfile.MyProfile(new_top, self.root, self.username).display(self.top)
+
+    def openAnnouncementsScreen(self):
+        new_top = tk.Toplevel(self.root)
+        new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
+        AnnouncementsScreen.AnnouncementsScreen(new_top, self.root, self.username).display(self.top)
 
     #Σβήνει το προηγούμενο παράθυρο και εμφανίζει το νέο
     def display(self, previous_window=None):

@@ -101,7 +101,7 @@ class LoginScreen:
             db.close()
             new_top = tk.Toplevel(self.root)
             new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
-            MainMenuScreen.MainMenuScreen(new_top, self.root, username)
+            MainMenuScreen.MainMenuScreen(new_top, self.root, username).display(self.top)
         else:
             db_cursor.close()
             db.close()
