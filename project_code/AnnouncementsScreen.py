@@ -7,6 +7,8 @@ from datetime import datetime
 import os.path
 import DBManager
 import MessageScreen
+import MessageTextScreen
+import OtherProfile
 
 _location = os.path.dirname(__file__)
 _debug = True
@@ -95,7 +97,7 @@ class AnnouncementsScreen:
             self.active_date_field.delete(0, tk.END)
             self.active_date_field.insert(0, selected_date)
 
-    def mark_interested(self, ann_id):
+    def update_interestedusers(self, ann_id):
         db = DBManager.DBManager(database='petato_db')
         db.connect()
         try:
@@ -127,7 +129,7 @@ class AnnouncementsScreen:
         db = DBManager.DBManager(database='petato_db')
         db.connect()
 
-        query = "SELECT ann_id, ann_title, ann_date, ann_type, adopt_description, host_start_date, host_end_date FROM announcements WHERE 1=1"
+        query = "SELECT ann_id, ann_title, ann_date, ann_type, adopt_description, host_start_date, host_end_date, ann_user FROM announcements WHERE 1=1"
         params = []
         if pet_filters:
             placeholders = ",".join(["%s"] * len(pet_filters))
@@ -157,12 +159,13 @@ class AnnouncementsScreen:
             canvas.pack(side="left", fill="both", expand=True)
             scrollbar.pack(side="right", fill="y")
 
-            for idx, (ann_id, title, date, ann_type, adopt_description, host_start_date, host_end_date) in enumerate(results):
+            for idx, (ann_id, title, date, ann_type, adopt_description, host_start_date, host_end_date, ann_user) in enumerate(results):
                 container = tk.Frame(scroll_frame, bg="#ffffff", bd=1, relief="solid", padx=10, pady=10)
                 container.grid(row=idx, column=0, sticky='ew', pady=5, padx=5)
                 container.grid_columnconfigure(0, weight=1)
                 container.grid_columnconfigure(1, weight=0)
                 container.grid_columnconfigure(2, weight=0)
+                container.grid_columnconfigure(3, weight=0)
 
                 title_label = tk.Label(container, text=title, font=("Segoe UI", 10, "bold"), anchor='w', bg="#ffffff")
                 title_label.grid(row=0, column=0, sticky='ew', padx=(20, 0))
@@ -172,24 +175,47 @@ class AnnouncementsScreen:
 
                 star_button = tk.Button(container, text="★", font=("Segoe UI", 14), fg="gold", bg="#ffffff", bd=0,
                                         activebackground="#ffffff",
-                                        command=lambda ann_id=ann_id: self.mark_interested(ann_id))
+                                        command=lambda ann_id=ann_id: self.update_interestedusers(ann_id))
                 star_button.grid(row=0, column=2, sticky='e', padx=(0, 10))
+
+                if ann_user:
+                    message_button = tk.Button(
+                        container, text="Message", bg="#2846a7", fg="white", font=("Segoe UI", 9),
+                        command=lambda ann_user=ann_user: MessageTextScreen.MessageTextScreen(self.top, self.username, ann_user)
+                    )
+                    message_button.grid(row=0, column=3, sticky='e', padx=(5, 10))
+
+                    username_label = tk.Label(
+                        container,
+                        text=f"Username: {ann_user}",
+                        font=("Segoe UI", 9, "underline"),
+                        fg="blue",
+                        bg="#ffffff",
+                        cursor="hand2"
+                    )
+                    username_label.grid(row=1, column=0, columnspan=4, sticky="w", padx=(20, 0), pady=(3, 0))
+
+                    def open_profile(event, user=ann_user):
+                        OtherProfile.OtherProfile(self.top, user)
+
+                    username_label.bind("<Button-1>", open_profile)
 
                 if ann_type == 'ADOPTION':
                     description = adopt_description 
                 elif ann_type == 'HOST':
                     description = f"Host start date: {host_start_date} Host end date: {host_end_date}"
+                
 
                 desc_label = tk.Label(container, text=description, wraplength=520, justify='left', bg="#ffffff",
                                       font=("Segoe UI", 9))
-                desc_label.grid(row=1, column=0, columnspan=3, sticky='w', pady=(8, 0))
+                desc_label.grid(row=2, column=0, columnspan=4, sticky='w', pady=(8, 0))
                 desc_label.grid_remove()
 
                 toggle_button = tk.Button(
                     container, text="More...", font=("Segoe UI", 9, "italic"),
                     bg="#ffffff", bd=0, fg="blue", cursor="hand2"
                 )
-                toggle_button.grid(row=2, column=0, columnspan=3, sticky="w", pady=(5, 0), padx=(20, 0))
+                toggle_button.grid(row=3, column=0, columnspan=4, sticky="w", pady=(5, 0), padx=(20, 0))
 
                 def toggle_description(label=desc_label, button=toggle_button):
                     if label.winfo_viewable():
