@@ -9,6 +9,7 @@ import DBManager
 import MessageScreen
 import MessageTextScreen
 import OtherProfile
+import MainMenuScreen
 
 _location = os.path.dirname(__file__)
 _debug = True
@@ -34,6 +35,11 @@ class AnnouncementsScreen:
         
         self.title_label = tk.Label(top, text="Announcements", font=("Segoe UI", 20, "bold"), bg=_bgcolor, fg="black")
         self.title_label.pack(side="top", pady=10)
+
+        self.back_button = tk.Button(
+        top, text="⟵ BACK", bg="#0000ff", fg="white", font=("Segoe UI", 10, "bold"),
+        command=self.go_back)
+        self.back_button.pack(side="top", anchor="w", padx=20, pady=(0, 5))
 
         self.top = top
         self.che50 = tk.IntVar()
@@ -90,6 +96,15 @@ class AnnouncementsScreen:
         if previous_window is not None:
             previous_window.destroy()
         self.top.deiconify()
+
+    def go_back(self):
+        new_window = tk.Toplevel(self.root)
+        main_menu_screen = MainMenuScreen.MainMenuScreen(
+            top=new_window,
+            root=self.root
+            
+        )
+        main_menu_screen.display(previous_window=self.top)    
 
     def set_active_date_field(self, field):
         self.active_date_field = field
