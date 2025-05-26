@@ -34,11 +34,15 @@ class MessageTextScreen:
         if len(content) > 150:
             MessageScreen.MessageScreen.display("Error", "Message must be 150 characters or fewer.")
             return
+        
+        if self.username == self.receiver:
+             MessageScreen.MessageScreen.display("Error", "You cannot send a message to yourself.")
+             return
 
         try:
             sender = SendMessage.SendMessage(content, self.username, self.receiver)
             sender.sendMsg()
             MessageScreen.MessageScreen.display("Message Sent", "Your message was sent successfully.")
             self.top.destroy()
-        except Exception:
+        except Exception as e:
             MessageScreen.MessageScreen.display("Error", "Failed to send the message.")
