@@ -5,10 +5,12 @@ from tkinter.constants import *
 from tkcalendar import Calendar
 from datetime import datetime
 import os.path
+
 import DBManager
 import MessageScreen
 import MessageTextScreen
 import OtherProfile
+import MainMenuScreen
 
 _location = os.path.dirname(__file__)
 _debug = True
@@ -31,9 +33,14 @@ class AnnouncementsScreen:
         top.maxsize(1600, 900)
         top.title("Petato")
         top.configure(background=_bgcolor)
-        
+
         self.title_label = tk.Label(top, text="Announcements", font=("Segoe UI", 20, "bold"), bg=_bgcolor, fg="black")
         self.title_label.pack(side="top", pady=10)
+
+        self.back_button = tk.Button(
+            top, text="⟵ BACK", bg="#0000ff", fg="white", font=("Segoe UI", 10, "bold"),
+            command=self.go_back)
+        self.back_button.pack(side="top", anchor="w", padx=20, pady=(0, 5))
 
         self.top = top
         self.che50 = tk.IntVar()
@@ -43,12 +50,29 @@ class AnnouncementsScreen:
 
         self.main_frame = tk.Frame(self.top, bg=_bgcolor)
         self.main_frame.pack(fill="both", expand=True)
-        self.main_frame.columnconfigure(0, weight=1)
-        self.main_frame.columnconfigure(1, weight=3)
+        self.main_frame.columnconfigure(0, weight=0)
+        self.main_frame.columnconfigure(1, weight=1)
         self.main_frame.rowconfigure(0, weight=1)
 
-        self.left_panel = tk.Frame(self.main_frame, bg=_bgcolor, bd=2, relief="groove")
-        self.left_panel.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
+        # === SCROLLABLE LEFT PANEL ===
+        left_canvas = tk.Canvas(self.main_frame, bg=_bgcolor, highlightthickness=0)
+        left_scrollbar = ttk.Scrollbar(self.main_frame, orient="vertical", command=left_canvas.yview)
+        left_scrollbar.grid(row=0, column=0, sticky="nse")
+
+        left_canvas.grid(row=0, column=0, sticky="nsew", padx=(10, 0), pady=10)
+        left_canvas.configure(yscrollcommand=left_scrollbar.set)
+
+        self.left_panel = tk.Frame(left_canvas, bg=_bgcolor)
+        left_canvas.create_window((0, 0), window=self.left_panel, anchor="nw")
+
+        def update_scrollregion(event):
+            left_canvas.configure(scrollregion=left_canvas.bbox("all"))
+
+        self.left_panel.bind("<Configure>", update_scrollregion)
+
+        def _on_mousewheel(event):
+            left_canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+        left_canvas.bind_all("<MouseWheel>", _on_mousewheel)
 
         self.ResultFrame = tk.Frame(self.main_frame, bg=_bgcolor, bd=2, relief="groove")
         self.ResultFrame.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
@@ -90,6 +114,11 @@ class AnnouncementsScreen:
         if previous_window is not None:
             previous_window.destroy()
         self.top.deiconify()
+
+    def go_back(self):
+        new_window = tk.Toplevel(self.root)
+        main_menu_screen = MainMenuScreen.MainMenuScreen(top=new_window, root=self.root)
+        main_menu_screen.display(previous_window=self.top)
 
     def set_active_date_field(self, field):
         self.active_date_field = field
@@ -199,7 +228,9 @@ class AnnouncementsScreen:
                     username_label.grid(row=1, column=0, columnspan=4, sticky="w", padx=(20, 0), pady=(3, 0))
 
                     def open_profile(event, user=ann_user):
-                        OtherProfile.OtherProfile(self.top, user)
+                        new_top = tk.Toplevel(self.root)
+                        new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
+                        OtherProfile.OtherProfile(new_top, self.root, user).display(self.top)
 
                     username_label.bind("<Button-1>", open_profile)
 
@@ -207,7 +238,6 @@ class AnnouncementsScreen:
                     description = adopt_description 
                 elif ann_type == 'HOST':
                     description = f"Host start date: {host_start_date} Host end date: {host_end_date}"
-                
 
                 desc_label = tk.Label(container, text=description, wraplength=520, justify='left', bg="#ffffff",
                                       font=("Segoe UI", 9))
@@ -237,13 +267,10 @@ class AnnouncementsScreen:
             db.close()
             MessageScreen.MessageScreen.display("There is no announcements", "There is no announcements")
 
-
 if __name__ == '__main__':
     root = tk.Tk()
-    root.withdraw()  #Κρύβει το κύριο παράθυρο
+    root.withdraw()
     top = tk.Toplevel(root)
     top.protocol('WM_DELETE_WINDOW', root.destroy)
-    username = "george_tsavos"
-    window = AnnouncementsScreen(top, root, username)
+    window = AnnouncementsScreen(top, root)
     root.mainloop()
-

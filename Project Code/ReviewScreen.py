@@ -6,7 +6,6 @@ import os.path
 
 import DBManager
 import MessageScreen
-import OtherProfile
 
 _location = os.path.dirname(__file__)
 
@@ -23,6 +22,9 @@ _tabbg2 = 'gray40'
 
 class ReviewScreen:
     def __init__(self, top=None, username="", logged_in_user=""):
+        
+        
+
         top.geometry("680x464+485+82")
         top.minsize(120, 1)
         top.maxsize(1540, 845)
@@ -127,6 +129,7 @@ class ReviewScreen:
         self.addreviewbutton.configure(text='''Add Review''')
         self.addreviewbutton.configure(command=self.add_review)
 
+
     def set_stars(self, stars):
         self.selected_stars = stars
 
@@ -146,7 +149,10 @@ class ReviewScreen:
             else:
                 star_buttons[i].configure(text='☆')  # full star showing the remaining stars
 
+
+
    # check if the user has submitted stars and review doen not surpass 100 words. then add to DB
+
     def add_review(self):
         review_text = self.Reviewtext.get("1.0", tk.END).strip()
 
@@ -181,9 +187,8 @@ if __name__ == '__main__':
     root.withdraw()  #Κρύβει το κύριο παράθυρο
     top = tk.Toplevel(root)
     top.protocol('WM_DELETE_WINDOW', root.destroy)
-    window = ReviewScreen(top, username="george_tsavos", logged_in_user="john_doe")
+    window = ReviewScreen(top, username="george_tsavos", logged_in_user="sof")
     root.mainloop()
-
 
 
 
