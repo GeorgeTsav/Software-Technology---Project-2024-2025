@@ -93,7 +93,7 @@ class OtherProfile:
         self.UserPhoto.configure(highlightcolor="#000000")
         self.UserPhoto.configure(text='''userphoto''')
 
-        #for username drom DB
+        #για username απο την Βάση Δεδομένων
         self.username_label = tk.Label(self.top, text=username)
         self.username_label.place(relx=0.375, rely=0.366, height=29, width=162)
         self.username_label.configure(activebackground="#d9d9d9")
@@ -159,14 +159,16 @@ class OtherProfile:
         self.backbutton.place(relx=0.07, rely=0.85, height=26, width=125)
         self.backbutton.configure(activebackground="#d9d9d9")
         self.backbutton.configure(activeforeground="black")
-        self.backbutton.configure(background="#d9d9d9")
+        self.backbutton.configure(background="#0000ff")
         self.backbutton.configure(cursor="fleur")
         self.backbutton.configure(disabledforeground="#a3a3a3")
-        self.backbutton.configure(foreground="#000000")
+        self.backbutton.configure(foreground="#ffffff")
         self.backbutton.configure(highlightbackground="#d9d9d9")
         self.backbutton.configure(highlightcolor="#000000")
-        self.backbutton.configure(text='''Back''')
+        self.backbutton.configure(text='''⟵ BACK''')
         self.backbutton.configure(command=self.go_back)
+        
+      
         
         self.load_reviews()
         
@@ -184,7 +186,7 @@ class OtherProfile:
     
     
             
-            #for pop up review screen
+            #για το pop up του review screen
     def open_review_screen(self):
         popup = tk.Toplevel(self.top)
         ReviewScreen.ReviewScreen(popup, username=self.username, logged_in_user=self.logged_in_user)
@@ -196,7 +198,7 @@ class OtherProfile:
         popup.protocol("WM_DELETE_WINDOW", on_close)
 
           
-         #for review list 
+         #για την λίστα αξιολογήσεων 
     def load_reviews(self):
       db = DBManager(host='localhost', user='root', password='', database='petato_db')
       db.connect()
@@ -211,7 +213,7 @@ class OtherProfile:
       cursor = db.execute_query(query, (self.username,))
 
       if cursor is None:
-        print("Δεν μπόρεσε να εκτελεστεί το query.")
+        print("Thes query could not be executed.")
         db.close()
         return
 
@@ -222,7 +224,7 @@ class OtherProfile:
           self.reviewlist.insert(tk.END, display_text)
       cursor.close()
 
-      # for average score
+      # για τον μέσο όρο των αστεριών
       avg_query = "SELECT ROUND(AVG(rev_score),1) FROM review WHERE rev_user = %s"
       cursor = db.execute_query(avg_query, (self.username,))
       if cursor:
@@ -235,7 +237,7 @@ class OtherProfile:
             self.StarforScore.configure(text="☆")
         cursor.close()
       else:
-        print("Δεν μπόρεσε να εκτελεστεί το query μέσου όρου.")
+        print("The average score query could not be executed.")
         self.ScoreLabel.configure(text="0")
         self.StarforScore.configure(text="☆")
 

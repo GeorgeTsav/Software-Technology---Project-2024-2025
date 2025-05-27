@@ -134,7 +134,7 @@ class ReviewScreen:
     def set_stars(self, stars):
         self.selected_stars = stars
 
-        # list of star buttons
+        # Λίστα με τα κουμπιά των αστεριών
         star_buttons = [
             self.insertstar1,
             self.insertstar2,
@@ -143,43 +143,47 @@ class ReviewScreen:
             self.insertstar5
         ]
 
-        # make rating visible
+        # για το μαρκάρισμα των αστεριών 
         for i in range(5):
             if i < stars:
-                star_buttons[i].configure(text='★')  # empty stars showing the stars submitted
+                star_buttons[i].configure(text='★')  # γεμισμένα αστέρια δείχνουν την βαθμολογία
             else:
-                star_buttons[i].configure(text='☆')  # full star showing the remaining stars
+                star_buttons[i].configure(text='☆')  # κενά αστέρια δείχνουν τα υπόλοιπα αστέρια
 
 
 
-   # check if the user has submitted stars and review doen not surpass 100 words. then add to DB
+   # για τους ελέγχους κατά την αποθήκευση της αξιολόγησης
 
     def add_review(self):
-        review_text = self.Reviewtext.get("1.0", tk.END).strip()
+      review_text = self.Reviewtext.get("1.0", tk.END).strip()
 
-        if len(review_text.split()) > 100:
-            MessageScreen.MessageScreen().display("Η αξιολόγηση δεν μπορεί να ξεπερνά τις 100 λέξεις.")
-            return
+    # πρώτος έλεγχος αν έχουν υποβληθεί αστέρια
+      if self.selected_stars == 0:
+        MessageScreen.MessageScreen().display("Please select stars before adding the review.")
+        return
 
-        if self.selected_stars == 0:
-            MessageScreen.MessageScreen().display("Παρακαλώ επιλέξτε αστέρια πριν προσθέσετε την αξιολόγηση.")
-            return
+    # μετά έλεγοχς αν το κείμενο ξεπερνάει τις 100 λέξεις
+      if len(review_text.split()) > 100:
+        MessageScreen.MessageScreen().display("The review cannot exceed 100 words.")
+        return
 
-        rev_writer = self.logged_in_user  # username of the user making the review
-        rev_user = self.username # username of the user accepting the review
 
-        db = DBManager.DBManager(host='localhost', user='root', password='', database='petato_db')
-        db.connect()
-        success = db.add_review(review_text, str(self.selected_stars), rev_writer, rev_user)
-        db.close()
 
-        # if everything done correctly reset text and stars
-        if success:
-            MessageScreen.MessageScreen().display("Η αξιολόγηση προστέθηκε με επιτυχία!")
+      rev_writer = self.logged_in_user  # username του χρήστη που κάνει την αξιλολόγηση
+      rev_user = self.username # username του χρήστη που αξιολογείται
+
+      db = DBManager.DBManager(host='localhost', user='root', password='', database='petato_db')
+      db.connect()
+      success = db.add_review(review_text, str(self.selected_stars), rev_writer, rev_user)
+      db.close()
+
+      # αν όλα έγιναν σωστά επαναφορά κειμένου και αστεριών
+      if success:
+            MessageScreen.MessageScreen().display("The review was added successfully!")
             self.Reviewtext.delete("1.0", tk.END)
             self.set_stars(0)
-        else:
-            MessageScreen.MessageScreen().display("Προέκυψε σφάλμα κατά την αποθήκευση της αξιολόγησης.")
+      else:
+            MessageScreen.MessageScreen().display("An error occurred while saving the review.")
 
 
 
