@@ -188,7 +188,7 @@ if __name__ == '__main__':
     root.withdraw()  
     root.protocol('WM_DELETE_WINDOW', root.destroy)
     top = tk.Toplevel(root)
-    window = ReviewScreen(top)
+    window = ReviewScreen(top, username="george_tsavos", logged_in_user="sof")
     root.mainloop()
 
 

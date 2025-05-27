@@ -19,7 +19,7 @@ _tabbg1 = '#d9d9d9'
 _tabbg2 = 'gray40' 
 
 class OtherProfile:
-    def __init__(self, top=None, username=None, logged_in_user=None):
+    def __init__(self, top=None, username=None, logged_in_user=None, main_menu_window=None):
         
 
         top.geometry("642x594+523+84")
@@ -37,6 +37,10 @@ class OtherProfile:
 
         self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
         top.configure(menu = self.menubar)
+        
+        self.main_menu_window = main_menu_window
+        
+
 
         self.reviewscreenframe = tk.Frame(self.top)
         self.reviewscreenframe.place(relx=0.016, rely=0.0, relheight=0.965
@@ -119,7 +123,7 @@ class OtherProfile:
 
         self.reviewlist = tk.Listbox(self.reviewscreenframe)
         self.reviewlist.place(relx=0.393, rely=0.698, relheight=0.246
-                , relwidth=0.23)
+                , relwidth=0.45)
         self.reviewlist.configure(background="white")
         self.reviewlist.configure(disabledforeground="#a3a3a3")
         self.reviewlist.configure(font="TkFixedFont")
@@ -145,11 +149,24 @@ class OtherProfile:
         
     
         self.WriteReviewButton = ttk.Button(self.reviewscreenframe)
-        self.WriteReviewButton.place(relx=0.701, rely=0.785, height=26  , width=125)
+        self.WriteReviewButton.place(relx=0.07, rely=0.785, height=26  , width=125)
         self.WriteReviewButton.configure(takefocus="")
         self.WriteReviewButton.configure(text='''WriteReview''')
         self.WriteReviewButton.configure(compound='left')
         self.WriteReviewButton.configure(command=self.open_review_screen)
+        
+        self.backbutton = tk.Button(self.reviewscreenframe)
+        self.backbutton.place(relx=0.07, rely=0.85, height=26, width=125)
+        self.backbutton.configure(activebackground="#d9d9d9")
+        self.backbutton.configure(activeforeground="black")
+        self.backbutton.configure(background="#d9d9d9")
+        self.backbutton.configure(cursor="fleur")
+        self.backbutton.configure(disabledforeground="#a3a3a3")
+        self.backbutton.configure(foreground="#000000")
+        self.backbutton.configure(highlightbackground="#d9d9d9")
+        self.backbutton.configure(highlightcolor="#000000")
+        self.backbutton.configure(text='''Back''')
+        self.backbutton.configure(command=self.go_back)
         
         self.load_reviews()
         
@@ -157,6 +174,15 @@ class OtherProfile:
         if previous_window is not None:
             previous_window.destroy()
         self.top.deiconify()
+    
+    
+     # Κλείνει το παράθυρο του MyProfile
+    def go_back(self):
+       self.top.destroy()  
+       if self.main_menu_window:
+           self.main_menu_window.deiconify()
+    
+    
             
             #for pop up review screen
     def open_review_screen(self):
@@ -221,7 +247,7 @@ if __name__ == '__main__':
     root.protocol( 'WM_DELETE_WINDOW' , root.destroy)
     global _top1, _w1
     _top1 = root
-    _w1 = OtherProfile(_top1)
+    _w1 = OtherProfile(_top1, username="george_tsavos", logged_in_user='sof')
     root.mainloop()
 
 
