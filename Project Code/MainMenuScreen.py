@@ -6,7 +6,7 @@ from PIL import Image, ImageTk
 import os.path
 
 import MyProfile
-import AnnouncementsScreen
+import Make_Search_Announcemnt_Screen
 
 _location = os.path.dirname(__file__)
 _debug = True
@@ -132,7 +132,7 @@ class MainMenuScreen:
     def openAnnouncementsScreen(self):
         new_top = tk.Toplevel(self.root)
         new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
-        AnnouncementsScreen.AnnouncementsScreen(new_top, self.root, self.username).display(self.top)
+        Make_Search_Announcemnt_Screen.Make_Search_Announcemnts_Screen(new_top, self.root, self.username).display(self.top)
 
     #Σβήνει το προηγούμενο παράθυρο και εμφανίζει το νέο
     def display(self, previous_window=None):
