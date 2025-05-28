@@ -21,10 +21,10 @@ class MessageTextScreen:
         self.message_entry.pack(pady=5)
 
         send_btn = tk.Button(self.top, text="Send", bg="#0078d7", fg="white", font=("Segoe UI", 10),
-                             command=self.send_message)
+                             command=self.forwardMessage)
         send_btn.pack(pady=(10, 20))
 
-    def send_message(self):
+    def forwardMessage(self):
         content = self.message_entry.get("1.0", tk.END).strip()
 
         if not content:
