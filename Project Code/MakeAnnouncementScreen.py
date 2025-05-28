@@ -260,7 +260,7 @@ class MakeAnnouncementScreen:
         ann_title = self.Text1.get("1.0", tk.END).strip()
         host_start_date = self.Entry1.get() if ann_type == 'HOST' else None
         host_end_date = self.Entry1_1.get() if ann_type == 'HOST' else None
-        adopt_description = self.Text2.get() if ann_type == 'ADOPTION' else None
+        adopt_description = self.Text2.get("1.0", "end-1c") if ann_type == 'ADOPTION' else None
 
         query = """
             INSERT INTO announcements
@@ -268,7 +268,6 @@ class MakeAnnouncementScreen:
             VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
         params = (ann_title, ann_type, ann_pet, adopt_description, host_start_date, host_end_date, ann_user)
-        print(f"Executing query: {query} with params: {params}")
         self.db.execute_query(query, params)
         self.db.connection.commit()  # Για να αποθηκευτούν οι αλλαγές
 
@@ -286,5 +285,5 @@ if __name__ == '__main__':
     root.withdraw()  #Κρύβει το κύριο παράθυρο
     top = tk.Toplevel(root)
     top.protocol('WM_DELETE_WINDOW', root.destroy)
-    window = MakeAnnouncementScreen(top, root, username='spiros')
+    window = MakeAnnouncementScreen(top, root, username='george_tsavos')
     root.mainloop()
