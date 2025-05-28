@@ -8,6 +8,7 @@ import DBManager
 import MainMenuScreen
 import MyMessagesScreen
 import MyAnnouncementsScreen
+import PersonalDiaryScreen
 
 _location = os.path.dirname(__file__)
 
@@ -170,7 +171,7 @@ class MyProfile:
         self.MyMessagesbutton.configure(command=self.openMyMessages)
         
         self.MyAppointmentsbutton = tk.Button(self.MyProfileframe)
-        self.MyAppointmentsbutton.place(relx=0.55, rely=0.908, height=26, width=107)
+        self.MyAppointmentsbutton.place(relx=0.67, rely=0.908, height=26, width=107)
         self.MyAppointmentsbutton.configure(activebackground="#d9d9d9")
         self.MyAppointmentsbutton.configure(activeforeground="black")
         self.MyAppointmentsbutton.configure(background="#0000ff")
@@ -180,8 +181,20 @@ class MyProfile:
         self.MyAppointmentsbutton.configure(highlightcolor="#000000")
         self.MyAppointmentsbutton.configure(text='''My Appointments''')
 
+        self.PersonalDiaryButton = tk.Button(self.MyProfileframe)
+        self.PersonalDiaryButton.place(relx=0.4, rely=0.908, height=26, width=130)
+        self.PersonalDiaryButton.configure(activebackground="#d9d9d9")
+        self.PersonalDiaryButton.configure(activeforeground="black")
+        self.PersonalDiaryButton.configure(background="#0000ff")
+        self.PersonalDiaryButton.configure(disabledforeground="#a3a3a3")
+        self.PersonalDiaryButton.configure(foreground="#ffffff")
+        self.PersonalDiaryButton.configure(highlightbackground="#d9d9d9")
+        self.PersonalDiaryButton.configure(highlightcolor="#000000")
+        self.PersonalDiaryButton.configure(text='''Personal Diary''')
+        self.PersonalDiaryButton.configure(command=self.openPersonalDiary)
+
         self.MyAnnouncemetsbutton = tk.Button(self.MyProfileframe)
-        self.MyAnnouncemetsbutton.place(relx=0.277, rely=0.908, height=26, width=117)
+        self.MyAnnouncemetsbutton.place(relx=0.15, rely=0.908, height=26, width=117)
         self.MyAnnouncemetsbutton.configure(activebackground="#d9d9d9")
         self.MyAnnouncemetsbutton.configure(activeforeground="black")
         self.MyAnnouncemetsbutton.configure(background="#0000ff")
@@ -254,6 +267,13 @@ class MyProfile:
         new_top = tk.Toplevel(self.root)
         new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
         MyAnnouncementsScreen.MyAnnouncementsScreen(new_top, self.root, self.username).display(self.top)
+
+    def openPersonalDiary(self):
+        new_top = tk.Toplevel(self.root)
+        new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
+        PersonalDiaryScreen.PersonalDiaryScreen(new_top, self.root, self.username).display(self.top)
+
+
 
 if __name__ == '__main__':
     root = tk.Tk()

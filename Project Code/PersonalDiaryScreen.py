@@ -4,6 +4,7 @@ from datetime import datetime
 
 import DBManager
 import PersonalDiaryTextScreen as pdts
+import MyProfile
 
 class PersonalDiaryScreen:
     def __init__(self, top=None, root=None, username=None):
@@ -94,7 +95,9 @@ class PersonalDiaryScreen:
         pdts.PersonalDiaryTextScreen(tk.Toplevel(self.root), self.root, self.username, date, self)
 
     def go_back(self):
-        pass
+        new_top = tk.Toplevel(self.root)
+        new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
+        MyProfile.MyProfile(new_top, self.root, self.username).display(self.top)
 
     #Σβήνει το προηγούμενο παράθυρο και εμφανίζει το νέο
     def display(self, previous_window=None):
