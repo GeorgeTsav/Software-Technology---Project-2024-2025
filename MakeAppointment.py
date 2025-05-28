@@ -26,13 +26,13 @@ class MakeAppointmentScreen:
 
         self.calendar = Calendar(self.cal_frame, selectmode='day', date_pattern='yyyy-mm-dd')
         self.calendar.pack(expand=True, fill='both')
-        self.mark_dates_with_entries()
+        self.ReturnAppointmentDates()
 
         # Buttons
         self.btn_frame = tk.Frame(self.top, background="#d9d9d9")
         self.btn_frame.pack(pady=10)
 
-        self.select_date_btn = tk.Button(self.btn_frame, text="Select Date", command=self.select_date)
+        self.select_date_btn = tk.Button(self.btn_frame, text="Select Date", command=self.SelectDate)
         self.select_date_btn.pack(side=tk.LEFT, padx=10)
 
         self.back_btn = tk.Button(self.btn_frame, text="Back", command=self.go_back)
@@ -43,14 +43,17 @@ class MakeAppointmentScreen:
         self.results_frame = tk.Frame(self.top, background="#d9d9d9")
         self.results_frame.pack(pady=10)
 
-    def mark_dates_with_entries(self):
+    def SearchAppointmentDates(self):
         db = DBManager.DBManager(database="petato_db")
         db.connect()
         query = "SELECT DISTINCT DATE(app_date) FROM appointments WHERE app_type = 'FREE'"
         cursor = db.execute_query(query)
-        dates_with_entries = [row[0].strftime("%Y-%m-%d") for row in cursor.fetchall()] if cursor else []
+        dates = [row[0].strftime("%Y-%m-%d") for row in cursor.fetchall()] if cursor else []
         db.close()
+        return dates
 
+    def ReturnAppointmentDates(self):
+        dates_with_entries = self.SearchAppointmentDates()
         for date_str in dates_with_entries:
             try:
                 self.calendar.calevent_create(datetime.strptime(date_str, "%Y-%m-%d"), 'Entry', 'entry')
@@ -58,7 +61,7 @@ class MakeAppointmentScreen:
                 pass
         self.calendar.tag_config('entry', background='lightgreen', foreground='black')
 
-    def select_date(self):
+    def SelectDate(self):
         selected_date = self.calendar.get_date()
 
         # UI adjustments
@@ -69,7 +72,6 @@ class MakeAppointmentScreen:
         for widget in self.results_frame.winfo_children():
             widget.destroy()
 
-        # Query DB
         db = DBManager.DBManager(database="petato_db")
         db.connect()
         query = """
@@ -90,7 +92,7 @@ class MakeAppointmentScreen:
                     text=f"{time} - Dr. {name} {surname}",
                     font=("Segoe UI", 10),
                     width=40,
-                    command=lambda a=app_id, t=time: self.go_to_confirm_popup(a, t)
+                    command=lambda a=app_id, t=time: self.CheckAvailability(a, t)
                 )
                 btn.pack(pady=2)
         else:
@@ -104,30 +106,31 @@ class MakeAppointmentScreen:
         self.select_date_btn.pack(side=tk.LEFT, padx=10)
         self.back_btn.pack_forget()
 
-    def go_to_confirm_popup(self, app_id, time):
+    def CheckAvailability(self, app_id, time):
         confirm = messagebox.askyesno("Confirm Appointment", f"Do you want to book this appointment at {time};")
         if confirm:
-            db = DBManager.DBManager(database="petato_db")
-            db.connect()
-            try:
-                # Update appointment status
-                update_query = "UPDATE appointments SET app_type = 'RESERVED' WHERE app_id = %s"
-                db.execute_query(update_query, (app_id,))
+            self.InsertAppointment(app_id, time)
 
-                # Insert into my_appointments
-                insert_query = """
-                INSERT INTO my_appointments (my_app_user, my_app_id, my_app_date)
-                VALUES (%s, %s, NOW())
-                """
-                db.execute_query(insert_query, (self.username, app_id))
+    def InsertAppointment(self, app_id, time):
+        db = DBManager.DBManager(database="petato_db")
+        db.connect()
+        try:
+            update_query = "UPDATE appointments SET app_type = 'RESERVED' WHERE app_id = %s"
+            db.execute_query(update_query, (app_id,))
 
-                db.connection.commit()
-                messagebox.showinfo("Success", "Appointment successfully reserved!")
-                self.go_back()
-            except Exception as e:
-                messagebox.showerror("Error", f"Something went wrong:\n{e}")
-            finally:
-                db.close()
+            insert_query = """
+            INSERT INTO my_appointments (my_app_user, my_app_id, my_app_date)
+            VALUES (%s, %s, NOW())
+            """
+            db.execute_query(insert_query, (self.username, app_id))
+
+            db.connection.commit()
+            messagebox.showinfo("Success", f"Appointment at {time} successfully reserved!")
+            self.go_back()
+        except Exception as e:
+            messagebox.showerror("Error", f"Something went wrong:\n{e}")
+        finally:
+            db.close()
 
     def display(self, previous_window=None):
         if previous_window is not None:
