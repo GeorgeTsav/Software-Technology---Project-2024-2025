@@ -4,12 +4,10 @@ import tkinter.ttk as ttk
 from tkinter.constants import *
 import os.path
 
-_location = os.path.dirname(__file__)
-
 import DBManager
 import MainMenuScreen
-import OtherProfile
-import MessageScreen
+
+_location = os.path.dirname(__file__)
 
 _bgcolor = '#d9d9d9'
 _fgcolor = '#000000'
@@ -20,27 +18,22 @@ _tabbg1 = '#d9d9d9'
 _tabbg2 = 'gray40' 
 
 class MyProfile:
-    def __init__(self, top=None, username=None, main_menu_window=None):
-        
-
-        top.geometry("642x594+523+84")
-        top.minsize(120, 1)
-        top.maxsize(1540, 845)
-        top.resizable(1,  1)
-        top.title("Petato")
-        top.configure(background="#d9d9d9")
-        top.configure(highlightbackground="#d9d9d9")
-        top.configure(highlightcolor="#000000")
-
+    def __init__(self, top=None, root=None, username=None):
         self.top = top
         self.username = username 
+        self.root = root
 
-        self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
-        top.configure(menu = self.menubar)
-        
-        self.main_menu_window = main_menu_window
-        
-        
+        self.top.geometry("642x594+523+84")
+        self.top.minsize(120, 1)
+        self.top.maxsize(1540, 845)
+        self.top.resizable(0, 0)
+        self.top.title("Petato")
+        self.top.configure(background="#d9d9d9")
+        self.top.configure(highlightbackground="#d9d9d9")
+        self.top.configure(highlightcolor="#000000")
+
+        self.menubar = tk.Menu(self.top, font="TkMenuFont", bg=_bgcolor, fg=_fgcolor)
+        self.top.configure(menu=self.menubar)
 
         self.MyProfileframe = tk.Frame(self.top)
         self.MyProfileframe.place(relx=0.016, rely=0.017, relheight=0.965
@@ -124,7 +117,7 @@ class MyProfile:
         self.MyScoreLabel.configure(text='''Label''')
 
         self.MyReviews = tk.Label(self.MyProfileframe)
-        self.MyReviews.place(relx=0.392, rely=0.611, height=28, width=146)
+        self.MyReviews.place(relx=0.392, rely=0.570, height=20, width=146)
         self.MyReviews.configure(activebackground="#d9d9d9")
         self.MyReviews.configure(activeforeground="black")
         self.MyReviews.configure(background="#808080")
@@ -137,8 +130,8 @@ class MyProfile:
         self.MyReviews.configure(text='''My Reviews''')
 
         self.Myreviewlist = tk.Listbox(self.MyProfileframe)
-        self.Myreviewlist.place(relx=0.392, rely=0.698, relheight=0.246
-                , relwidth=0.23)
+        self.Myreviewlist.place(relx=0.280, rely=0.610, relheight=0.246
+                , relwidth=0.45)
         self.Myreviewlist.configure(background="white")
         self.Myreviewlist.configure(disabledforeground="#a3a3a3")
         self.Myreviewlist.configure(font="TkFixedFont")
@@ -150,85 +143,61 @@ class MyProfile:
         
         self.load_Myreviews()
         
-        self.barframe = tk.Frame(self.MyProfileframe)
-        self.barframe.place(relx=0.016, rely=0.017, relheight=0.131, relwidth=0.971)
-        self.barframe.configure(relief='groove')
-        self.barframe.configure(borderwidth="2")
-        self.barframe.configure(relief="groove")
-        self.barframe.configure(background="#d9d9d9")
-        self.barframe.configure(highlightbackground="#d9d9d9")
-        self.barframe.configure(highlightcolor="#000000")
-
         
-        self.myprofile = tk.Button(self.MyProfileframe)
-        self.myprofile.place(relx=0.065, rely=0.052, height=36, width=77)
-        self.myprofile.configure(activebackground="#d9d9d9")
-        self.myprofile.configure(activeforeground="black")
-        self.myprofile.configure(background="#d9d9d9")
-        self.myprofile.configure(disabledforeground="#a3a3a3")
-        self.myprofile.configure(foreground="#000000")
-        self.myprofile.configure(highlightbackground="#d9d9d9")
-        self.myprofile.configure(highlightcolor="#000000")
-        self.myprofile.configure(text='''My Profile''')
-
-        self.announcementbutton = tk.Button(self.MyProfileframe)
-        self.announcementbutton.place(relx=0.261, rely=0.052, height=36,  width=107)
-        self.announcementbutton.configure(activebackground="#d9d9d9")
-        self.announcementbutton.configure(activeforeground="black")
-        self.announcementbutton.configure(background="#d9d9d9")
-        self.announcementbutton.configure(disabledforeground="#a3a3a3")
-        self.announcementbutton.configure(foreground="#000000")
-        self.announcementbutton.configure(highlightbackground="#d9d9d9")
-        self.announcementbutton.configure(highlightcolor="#000000")
-        self.announcementbutton.configure(text='''Announcements''')
-
-        self.Announcementbutton = tk.Button(self.MyProfileframe)
-        self.Announcementbutton.place(relx=0.522, rely=0.052, height=36, width=147)
-        self.Announcementbutton.configure(activebackground="#d9d9d9")
-        self.Announcementbutton.configure(activeforeground="black")
-        self.Announcementbutton.configure(background="#d9d9d9")
-        self.Announcementbutton.configure(disabledforeground="#a3a3a3")
-        self.Announcementbutton.configure(foreground="#000000")
-        self.Announcementbutton.configure(highlightbackground="#d9d9d9")
-        self.Announcementbutton.configure(highlightcolor="#000000")
-        self.Announcementbutton.configure(text='''Make an Announcement''')
 
         self.backbutton = tk.Button(self.MyProfileframe)
-        self.backbutton.place(relx=0.799, rely=0.89, height=26, width=57)
+        self.backbutton.place(relx=0.799, rely=0.07, height=26, width=57)
         self.backbutton.configure(activebackground="#d9d9d9")
         self.backbutton.configure(activeforeground="black")
-        self.backbutton.configure(background="#d9d9d9")
+        self.backbutton.configure(background="#0000ff")
         self.backbutton.configure(cursor="fleur")
         self.backbutton.configure(disabledforeground="#a3a3a3")
-        self.backbutton.configure(foreground="#000000")
+        self.backbutton.configure(foreground="#ffffff")
         self.backbutton.configure(highlightbackground="#d9d9d9")
         self.backbutton.configure(highlightcolor="#000000")
-        self.backbutton.configure(text='''Back''')
+        self.backbutton.configure(text='''⟵ BACK''')
         self.backbutton.configure(command=self.go_back)
-
         
-        self.eshopbutton = tk.Button(self.MyProfileframe)
-        self.eshopbutton.place(relx=0.799, rely=0.052, height=36, width=57)
-        self.eshopbutton.configure(activebackground="#d9d9d9")
-        self.eshopbutton.configure(activeforeground="black")
-        self.eshopbutton.configure(background="#ffff00")
-        self.eshopbutton.configure(disabledforeground="#a3a3a3")
-        self.eshopbutton.configure(font="-family {Segoe UI} -size 9")
-        self.eshopbutton.configure(foreground="black")
-        self.eshopbutton.configure(highlightbackground="#d9d9d9")
-        self.eshopbutton.configure(highlightcolor="#000000")
-        self.eshopbutton.configure(text='''e-shop''')
-      
-      
-      # Κλείνει το παράθυρο του MyProfile
-    def go_back(self):
-       self.top.destroy()  
-       if self.main_menu_window:
-           self.main_menu_window.deiconify() 
-           
- 
+        self.MyMessagesbutton = tk.Button(self.MyProfileframe)
+        self.MyMessagesbutton.place(relx=0.033, rely=0.07, height=26, width=97)
+        self.MyMessagesbutton.configure(activebackground="#d9d9d9")
+        self.MyMessagesbutton.configure(activeforeground="black")
+        self.MyMessagesbutton.configure(background="#d9d9d9")
+        self.MyMessagesbutton.configure(disabledforeground="#a3a3a3")
+        self.MyMessagesbutton.configure(foreground="#000000")
+        self.MyMessagesbutton.configure(highlightbackground="#d9d9d9")
+        self.MyMessagesbutton.configure(highlightcolor="#000000")
+        self.MyMessagesbutton.configure(text='''My Messages''')
+        
+        self.MyAppointmentsbutton = tk.Button(self.MyProfileframe)
+        self.MyAppointmentsbutton.place(relx=0.55, rely=0.908, height=26, width=107)
+        self.MyAppointmentsbutton.configure(activebackground="#d9d9d9")
+        self.MyAppointmentsbutton.configure(activeforeground="black")
+        self.MyAppointmentsbutton.configure(background="#0000ff")
+        self.MyAppointmentsbutton.configure(disabledforeground="#a3a3a3")
+        self.MyAppointmentsbutton.configure(foreground="#ffffff")
+        self.MyAppointmentsbutton.configure(highlightbackground="#d9d9d9")
+        self.MyAppointmentsbutton.configure(highlightcolor="#000000")
+        self.MyAppointmentsbutton.configure(text='''My Appointments''')
 
-       #for reviewlist
+        self.MyAnnouncemetsbutton = tk.Button(self.MyProfileframe)
+        self.MyAnnouncemetsbutton.place(relx=0.277, rely=0.908, height=26, width=117)
+        self.MyAnnouncemetsbutton.configure(activebackground="#d9d9d9")
+        self.MyAnnouncemetsbutton.configure(activeforeground="black")
+        self.MyAnnouncemetsbutton.configure(background="#0000ff")
+        self.MyAnnouncemetsbutton.configure(disabledforeground="#a3a3a3")
+        self.MyAnnouncemetsbutton.configure(foreground="#ffffff")
+        self.MyAnnouncemetsbutton.configure(highlightbackground="#d9d9d9")
+        self.MyAnnouncemetsbutton.configure(highlightcolor="#000000")
+        self.MyAnnouncemetsbutton.configure(text='''My Announcemets''')
+      
+    # Κλείνει το παράθυρο του MyProfile
+    def go_back(self):
+        new_top = tk.Toplevel(self.root)
+        new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
+        MainMenuScreen.MainMenuScreen(new_top, self.root, self.username).display(self.top)
+           
+    #για την λιστα των αξιλογήσεων
     def load_Myreviews(self):
         db = DBManager.DBManager(host='localhost', user='root', password='', database='petato_db')
         db.connect()
@@ -241,7 +210,7 @@ class MyProfile:
         """
         cursor = db.execute_query(review_query, (self.username,))
         if cursor is None:
-            print("Δεν μπόρεσε να εκτελεστεί το query αξιολογήσεων.")
+            print("The review query could not be executed.")
             db.close()
             return
 
@@ -265,21 +234,25 @@ class MyProfile:
                 self.StarforMyScore.configure(text="☆")
             cursor.close()
         else:
-            print("Δεν μπόρεσε να εκτελεστεί το query μέσου όρου.")
+            print("The average query could not be executed")
             self.MyScoreLabel.configure(text="0")
             self.StarforMyScore.configure(text="☆")
 
         db.close()
 
+    def display(self, previous_window=None):
+        if previous_window is not None:
+            previous_window.destroy()
+        self.top.deiconify()
+       
 
 
 if __name__ == '__main__':
     root = tk.Tk()
-    root.protocol( 'WM_DELETE_WINDOW' , root.destroy)
-    # Creates a toplevel widget.
-    global _top1, _w1
-    _top1 = root
-    _w1 = MyProfile(_top1, username="george_tsavos")
+    root.withdraw()  #Κρύβει το κύριο παράθυρο
+    top = tk.Toplevel(root)
+    top.protocol('WM_DELETE_WINDOW', root.destroy)
+    window = MyProfile(top, root, username="george_tsavos")
     root.mainloop()
 
 

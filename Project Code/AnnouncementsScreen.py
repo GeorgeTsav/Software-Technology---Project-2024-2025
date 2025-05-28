@@ -117,7 +117,8 @@ class AnnouncementsScreen:
 
     def go_back(self):
         new_window = tk.Toplevel(self.root)
-        main_menu_screen = MainMenuScreen.MainMenuScreen(top=new_window, root=self.root)
+        new_window.protocol('WM_DELETE_WINDOW', self.root.destroy)
+        main_menu_screen = MainMenuScreen.MainMenuScreen(top=new_window, root=self.root, username=self.username)
         main_menu_screen.display(previous_window=self.top)
 
     def set_active_date_field(self, field):
@@ -133,7 +134,7 @@ class AnnouncementsScreen:
         db = DBManager.DBManager(database='petato_db')
         db.connect()
         try:
-            query = "INSERT INTO interested_users (int_an, int_user) VALUES (%s, %s)"
+            query = "INSERT INTO interested_users (int_ann, int_user) VALUES (%s, %s)"
             cursor = db.connection.cursor()
             cursor.execute(query, (ann_id, self.username))
             db.connection.commit()
@@ -272,5 +273,5 @@ if __name__ == '__main__':
     root.withdraw()
     top = tk.Toplevel(root)
     top.protocol('WM_DELETE_WINDOW', root.destroy)
-    window = AnnouncementsScreen(top, root)
+    window = AnnouncementsScreen(top, root, username="giwrgos2")
     root.mainloop()

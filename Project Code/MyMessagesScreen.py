@@ -132,11 +132,11 @@ class MyMessagesScreen:
         for widget in frame.winfo_children():
             widget.destroy()
 
+
 if __name__ == "__main__":
     root = tk.Tk()
     root.withdraw()  #Κρύβει το κύριο παράθυρο
     top = tk.Toplevel(root)
     top.protocol('WM_DELETE_WINDOW', root.destroy)
-    username = "giwrgos2"
-    window = MyMessagesScreen(top, username)
+    window = MyMessagesScreen(top, username="giwrgos2")
     root.mainloop()

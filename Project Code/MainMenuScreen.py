@@ -145,7 +145,7 @@ if __name__ == '__main__':
     root.withdraw()  #Κρύβει το κύριο παράθυρο
     top = tk.Toplevel(root)
     top.protocol('WM_DELETE_WINDOW', root.destroy)
-    window = MainMenuScreen(top, root)
+    window = MainMenuScreen(top, root, username="george_tsavos")
     root.mainloop()
 
 

@@ -36,11 +36,15 @@ class MessageTextScreen:
             return
         
         if self.username == self.receiver:
-             MessageScreen.MessageScreen.display("Error", "You cannot send a message to yourself.")
-             return
+            MessageScreen.MessageScreen.display("Error", "You cannot send a message to yourself.")
+            return
+        
+        if self.receiver == "System":
+            MessageScreen.MessageScreen.display("Error", "You cannot send a message to the System.")
+            return
 
         try:
-            sender = SendMessage.SendMessage(content, self.username, self.receiver)
+            sender = SendMessage.SendMessage(content, self.receiver, self.username)
             sender.sendMsg()
             MessageScreen.MessageScreen.display("Message Sent", "Your message was sent successfully.")
             self.top.destroy()

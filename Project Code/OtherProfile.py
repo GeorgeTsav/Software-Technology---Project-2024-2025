@@ -20,23 +20,22 @@ _tabbg2 = 'gray40'
 
 class OtherProfile:
     def __init__(self, top=None, root=None, username=None, logged_in_user=None):
-        top.geometry("642x594+523+84")
-        top.minsize(120, 1)
-        top.maxsize(1540, 845)
-        top.resizable(1,  1)
-        top.title("Petato")
-        top.configure(background="#d9d9d9")
-        top.configure(highlightbackground="#d9d9d9")
-        top.configure(highlightcolor="#000000")
-
         self.top = top
         self.root = root
         self.username = username
         self.logged_in_user = logged_in_user
 
-        self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
-        top.configure(menu = self.menubar)
-        
+        self.top.geometry("642x594+523+84")
+        self.top.minsize(120, 1)
+        self.top.maxsize(1540, 845)
+        self.top.resizable(0,  0)
+        self.top.title("Petato")
+        self.top.configure(background="#d9d9d9")
+        self.top.configure(highlightbackground="#d9d9d9")
+        self.top.configure(highlightcolor="#000000")
+
+        self.menubar = tk.Menu(self.top, font="TkMenuFont", bg=_bgcolor, fg=_fgcolor)
+        self.top.configure(menu=self.menubar)
 
 
         self.reviewscreenframe = tk.Frame(self.top)
@@ -178,7 +177,7 @@ class OtherProfile:
     def go_back(self):
       new_top = tk.Toplevel(self.root)
       new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
-      MainMenuScreen.MainMenuScreen(new_top, self.root, self.username).display(self.top)
+      MainMenuScreen.MainMenuScreen(new_top, self.root, self.logged_in_user).display(self.top)
 
     #for pop up review screen
     def open_review_screen(self):
