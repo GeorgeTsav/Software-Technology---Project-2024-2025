@@ -3,8 +3,8 @@ import tkinter as tk
 from tkinter.constants import *
 import tkinter.ttk as ttk
 import os.path
-import re
 import DBManager
+from tkcalendar import DateEntry  # ✅ ΝΕΟ
 
 debug = True
 _location = os.path.dirname(__file__)
@@ -30,206 +30,59 @@ class MakeAnnouncementScreen:
         self.top.resizable(1, 1)
         self.top.title("Petato")
         self.top.configure(background="#d9d9d9")
-        self.top.configure(highlightbackground="#d9d9d9")
-        self.top.configure(highlightcolor="#000000")
 
-        self.combobox = tk.StringVar()
         self.announcement_type = tk.StringVar()
         self.pet_type = tk.StringVar()
 
         self.Frame1 = tk.Frame(self.top)
         self.Frame1.place(relx=0.133, rely=0.178, relheight=0.711, relwidth=0.758)
-        self.Frame1.configure(relief='raised')
-        self.Frame1.configure(borderwidth="2")
-        self.Frame1.configure(relief="raised")
-        self.Frame1.configure(background="#ffffff")
-        self.Frame1.configure(highlightbackground="#d9d9d9")
-        self.Frame1.configure(highlightcolor="#000000")
+        self.Frame1.configure(relief='raised', borderwidth="2", background="#ffffff")
 
-        self.Label1_2_1 = tk.Label(self.Frame1)
-        self.Label1_2_1.place(relx=0.022, rely=0.5, height=25, width=100)
-        self.Label1_2_1.configure(activebackground="#d9d9d9")
-        self.Label1_2_1.configure(activeforeground="black")
-        self.Label1_2_1.configure(anchor='w')
-        self.Label1_2_1.configure(background="#d9d9d9")
-        self.Label1_2_1.configure(compound='left')
-        self.Label1_2_1.configure(disabledforeground="#a3a3a3")
-        self.Label1_2_1.configure(font="-family {Segoe UI} -size 9")
-        self.Label1_2_1.configure(foreground="#000000")
-        self.Label1_2_1.configure(highlightbackground="#d9d9d9")
-        self.Label1_2_1.configure(highlightcolor="#000000")
-        self.Label1_2_1.configure(relief="groove")
-        self.Label1_2_1.configure(text='Host End Date')
-
-        self.Label1_2 = tk.Label(self.Frame1)
-        self.Label1_2.place(relx=0.022, rely=0.391, height=25, width=100)
-        self.Label1_2.configure(activebackground="#d9d9d9")
-        self.Label1_2.configure(activeforeground="black")
-        self.Label1_2.configure(anchor='w')
-        self.Label1_2.configure(background="#d9d9d9")
-        self.Label1_2.configure(compound='left')
-        self.Label1_2.configure(disabledforeground="#a3a3a3")
-        self.Label1_2.configure(font="-family {Segoe UI} -size 9")
-        self.Label1_2.configure(foreground="#000000")
-        self.Label1_2.configure(highlightbackground="#d9d9d9")
-        self.Label1_2.configure(highlightcolor="#000000")
-        self.Label1_2.configure(relief="groove")
-        self.Label1_2.configure(text='Host Start Date')
-
-        
-        self.TCombobox1_1 = ttk.Combobox(self.Frame1)
-        self.TCombobox1_1.place(relx=0.149, rely=0.281, relheight=0.078, relwidth=0.22)
-        self.value_list = ['DOG', 'CAT']
-        self.TCombobox1_1.configure(values=self.value_list)
-        self.TCombobox1_1.configure(font="-family {Segoe UI} -size 9")
-        self.TCombobox1_1.configure(textvariable=self.combobox)
-
-        self.Label1_1_1 = tk.Label(self.Frame1)
-        self.Label1_1_1.place(relx=0.022, rely=0.281, height=25, width=50)
-        self.Label1_1_1.configure(activebackground="#d9d9d9")
-        self.Label1_1_1.configure(activeforeground="black")
-        self.Label1_1_1.configure(anchor='w')
-        self.Label1_1_1.configure(background="#d9d9d9")
-        self.Label1_1_1.configure(compound='left')
-        self.Label1_1_1.configure(disabledforeground="#a3a3a3")
-        self.Label1_1_1.configure(font="-family {Segoe UI} -size 9")
-        self.Label1_1_1.configure(foreground="#000000")
-        self.Label1_1_1.configure(highlightbackground="#d9d9d9")
-        self.Label1_1_1.configure(highlightcolor="#000000")
-        self.Label1_1_1.configure(relief="groove")
-        self.Label1_1_1.configure(text='Pet')
-
-        self.Text1 = tk.Text(self.Frame1)
-        self.Text1.place(relx=0.22, rely=0.172, relheight=0.078, relwidth=0.295)
-        self.Text1.configure(background="white")
-        self.Text1.configure(font="TkTextFont")
-        self.Text1.configure(foreground="black")
-        self.Text1.configure(highlightbackground="#d9d9d9")
-        self.Text1.configure(highlightcolor="#000000")
-        self.Text1.configure(insertbackground="#000000")
-        self.Text1.configure(selectbackground="#d9d9d9")
-        self.Text1.configure(selectforeground="black")
-        self.Text1.configure(wrap="word")
-
-        self.Label1_1 = tk.Label(self.Frame1)
+        # Τίτλος αγγελίας
+        self.Label1_1 = tk.Label(self.Frame1, text='Title', background="#d9d9d9")
         self.Label1_1.place(relx=0.022, rely=0.172, height=25, width=80)
-        self.Label1_1.configure(activebackground="#d9d9d9")
-        self.Label1_1.configure(activeforeground="black")
-        self.Label1_1.configure(anchor='w')
-        self.Label1_1.configure(background="#d9d9d9")
-        self.Label1_1.configure(compound='left')
-        self.Label1_1.configure(disabledforeground="#a3a3a3")
-        self.Label1_1.configure(font="-family {Segoe UI} -size 9")
-        self.Label1_1.configure(foreground="#000000")
-        self.Label1_1.configure(highlightbackground="#d9d9d9")
-        self.Label1_1.configure(highlightcolor="#000000")
-        self.Label1_1.configure(relief="groove")
-        self.Label1_1.configure(text='Title')
+        self.Text1 = tk.Text(self.Frame1, wrap="word")
+        self.Text1.place(relx=0.22, rely=0.172, relheight=0.078, relwidth=0.295)
 
         # Τύπος αγγελίας
+        self.Label1 = tk.Label(self.Frame1, text='Type of Announcement', background="#d9d9d9")
+        self.Label1.place(relx=0.022, rely=0.063, height=25, width=150)
         self.TCombobox1 = ttk.Combobox(self.Frame1, textvariable=self.announcement_type)
         self.TCombobox1.place(relx=0.374, rely=0.063, relheight=0.078, relwidth=0.301)
         self.TCombobox1['values'] = ['ADOPTION', 'HOST']
-        self.TCombobox1.configure(font="-family {Segoe UI} -size 9")
         self.TCombobox1.bind("<<ComboboxSelected>>", self.on_type_change)
 
         # Τύπος ζώου
+        self.Label1_1_1 = tk.Label(self.Frame1, text='Pet', background="#d9d9d9")
+        self.Label1_1_1.place(relx=0.022, rely=0.281, height=25, width=50)
         self.TCombobox1_1 = ttk.Combobox(self.Frame1, textvariable=self.pet_type)
         self.TCombobox1_1.place(relx=0.149, rely=0.281, relheight=0.078, relwidth=0.22)
         self.TCombobox1_1['values'] = ['DOG', 'CAT']
-        self.TCombobox1_1.configure(font="-family {Segoe UI} -size 9")
 
-        # Host_start_date
-        vcmd = (self.Frame1.register(self.validate_date), '%P')
-        self.Entry1 = tk.Entry(self.Frame1, validate='focusout', validatecommand=vcmd)
+        # Ημερομηνίες hosting
+        self.Label1_2 = tk.Label(self.Frame1, text='Host Start Date', background="#d9d9d9")
+        self.Label1_2.place(relx=0.022, rely=0.391, height=25, width=100)
+        self.Entry1 = DateEntry(self.Frame1, date_pattern='dd/mm/yyyy', state='disabled')
         self.Entry1.place(relx=0.268, rely=0.391, height=25, relwidth=0.253)
-        self.Entry1.insert(0, "01/01/2025")  # Default value
 
-        # Host_end_date
-        self.Entry1_1 = tk.Entry(self.Frame1, validate='focusout', validatecommand=vcmd)
+        self.Label1_2_1 = tk.Label(self.Frame1, text='Host End Date', background="#d9d9d9")
+        self.Label1_2_1.place(relx=0.022, rely=0.5, height=25, width=100)
+        self.Entry1_1 = DateEntry(self.Frame1, date_pattern='dd/mm/yyyy', state='disabled')
         self.Entry1_1.place(relx=0.268, rely=0.5, height=25, relwidth=0.253)
-        self.Entry1_1.configure(background="white")
-        self.Entry1_1.configure(disabledforeground="#a3a3a3")
-        self.Entry1_1.configure(font="-family {Courier New} -size 10")
-        self.Entry1_1.configure(foreground="#000000")
-        self.Entry1_1.configure(highlightbackground="#d9d9d9")
-        self.Entry1_1.configure(highlightcolor="#000000")
-        self.Entry1_1.configure(insertbackground="#000000")
-        self.Entry1_1.configure(selectbackground="#d9d9d9")
-        self.Entry1_1.configure(selectforeground="black")
 
-        # Αρχικά απενεργοποιημένα
-        self.Entry1.config(state='disabled')
-        self.Entry1_1.config(state='disabled')
-
-        self.Label1 = tk.Label(self.Frame1)
-        self.Label1.place(relx=0.022, rely=0.063, height=25, width=150)
-        self.Label1.configure(activebackground="#d9d9d9")
-        self.Label1.configure(activeforeground="black")
-        self.Label1.configure(anchor='w')
-        self.Label1.configure(background="#d9d9d9")
-        self.Label1.configure(compound='left')
-        self.Label1.configure(disabledforeground="#a3a3a3")
-        self.Label1.configure(font="-family {Segoe UI} -size 9")
-        self.Label1.configure(foreground="#000000")
-        self.Label1.configure(highlightbackground="#d9d9d9")
-        self.Label1.configure(highlightcolor="#000000")
-        self.Label1.configure(relief="groove")
-        self.Label1.configure(text='Type of Announcement')
-
-        self.Label1_3 = tk.Label(self.Frame1)
+        # Περιγραφή υιοθεσίας
+        self.Label1_3 = tk.Label(self.Frame1, text='Adopt Description', background="#d9d9d9")
         self.Label1_3.place(relx=0.022, rely=0.656, height=25, width=120)
-        self.Label1_3.configure(activebackground="#d9d9d9")
-        self.Label1_3.configure(activeforeground="black")
-        self.Label1_3.configure(anchor='w')
-        self.Label1_3.configure(background="#d9d9d9")
-        self.Label1_3.configure(compound='left')
-        self.Label1_3.configure(disabledforeground="#a3a3a3")
-        self.Label1_3.configure(font="-family {Segoe UI} -size 9")
-        self.Label1_3.configure(foreground="#000000")
-        self.Label1_3.configure(highlightbackground="#d9d9d9")
-        self.Label1_3.configure(highlightcolor="#000000")
-        self.Label1_3.configure(relief="groove")
-        self.Label1_3.configure(text='Adopt Description')
-
-        self.Button1 = tk.Button(self.Frame1)
-        self.Button1.place(relx=0.022, rely=0.906, height=26, width=47)
-        self.Button1.configure(activebackground="#d9d9d9")
-        self.Button1.configure(activeforeground="black")
-        self.Button1.configure(background="#0080ff")
-        self.Button1.configure(disabledforeground="#a3a3a3")
-        self.Button1.configure(font="-family {Segoe UI} -size 9")
-        self.Button1.configure(foreground="#000000")
-        self.Button1.configure(highlightbackground="#d9d9d9")
-        self.Button1.configure(highlightcolor="#000000")
-        self.Button1.configure(text='Upload')
-        self.Button1.configure(command=self.upload_announcement)
-
-        self.Button2 = tk.Button(self.Frame1)
-        self.Button2.place(relx=0.154, rely=0.906, height=26, width=47)
-        self.Button2.configure(activebackground="#d9d9d9")
-        self.Button2.configure(activeforeground="black")
-        self.Button2.configure(background="#0080ff")
-        self.Button2.configure(disabledforeground="#a3a3a3")
-        self.Button2.configure(font="-family {Segoe UI} -size 9")
-        self.Button2.configure(foreground="#000000")
-        self.Button2.configure(highlightbackground="#d9d9d9")
-        self.Button2.configure(highlightcolor="#000000")
-        self.Button2.configure(text='Delete')
-        self.Button2.configure(command=self.clear_fields)
-
-        self.Text2 = tk.Text(self.Frame1)
+        self.Text2 = tk.Text(self.Frame1, wrap="word")
         self.Text2.place(relx=0.462, rely=0.656, relheight=0.294, relwidth=0.514)
-        self.Text2.configure(background="white")
-        self.Text2.configure(font="TkTextFont")
-        self.Text2.configure(foreground="black")
-        self.Text2.configure(highlightbackground="#d9d9d9")
-        self.Text2.configure(highlightcolor="#000000")
-        self.Text2.configure(insertbackground="#000000")
-        self.Text2.configure(relief="groove")
-        self.Text2.configure(selectbackground="#d9d9d9")
-        self.Text2.configure(selectforeground="black")
-        self.Text2.configure(wrap="word")
+
+        # Κουμπί Upload
+        self.Button1 = tk.Button(self.Frame1, text='Upload', background="#0080ff", command=self.upload_announcement)
+        self.Button1.place(relx=0.022, rely=0.906, height=26, width=60)
+
+        # Κουμπί Delete
+        self.Button2 = tk.Button(self.Frame1, text='Delete', background="#0080ff", command=self.clear_fields)
+        self.Button2.place(relx=0.154, rely=0.906, height=26, width=60)
 
         self.db = DBManager.DBManager(host='localhost', user='root', password='', database='petato_db')
         self.db.connect()
@@ -239,27 +92,21 @@ class MakeAnnouncementScreen:
             self.Entry1.config(state='normal')
             self.Entry1_1.config(state='normal')
             self.Text2.delete("1.0", tk.END)
-            self.Text2.config(state='disabled')  # Disable Adopt Description
+            self.Text2.config(state='disabled')
         else:
-            self.Entry1.delete(0, tk.END)
-            self.Entry1_1.delete(0, tk.END)
+            self.Entry1.set_date('01/01/2025')
+            self.Entry1_1.set_date('01/01/2025')
             self.Entry1.config(state='disabled')
             self.Entry1_1.config(state='disabled')
-            self.Text2.config(state='normal')    # Enable Adopt Description
-
-    def validate_date(self, value):
-        # Επιτρέπει κενό ή ΗΗ/ΜΜ/ΕΕΕΕ
-        if not value:
-            return True
-        return bool(re.match(r'^\d{2}/\d{2}/\d{4}$', value))
+            self.Text2.config(state='normal')
 
     def upload_announcement(self):
         ann_user = self.username
         ann_type = self.announcement_type.get()
         ann_pet = self.pet_type.get()
         ann_title = self.Text1.get("1.0", tk.END).strip()
-        host_start_date = self.Entry1.get() if ann_type == 'HOST' else None
-        host_end_date = self.Entry1_1.get() if ann_type == 'HOST' else None
+        host_start_date = self.Entry1.get_date().strftime('%d/%m/%Y') if ann_type == 'HOST' else None
+        host_end_date = self.Entry1_1.get_date().strftime('%d/%m/%Y') if ann_type == 'HOST' else None
         adopt_description = self.Text2.get("1.0", "end-1c") if ann_type == 'ADOPTION' else None
 
         query = """
@@ -269,20 +116,21 @@ class MakeAnnouncementScreen:
         """
         params = (ann_title, ann_type, ann_pet, adopt_description, host_start_date, host_end_date, ann_user)
         self.db.execute_query(query, params)
-        self.db.connection.commit()  # Για να αποθηκευτούν οι αλλαγές
+        self.db.connection.commit()
 
     def clear_fields(self):
         self.announcement_type.set('')
         self.pet_type.set('')
         self.Text1.delete("1.0", tk.END)
-        self.Entry1.delete(0, tk.END)
-        self.Entry1_1.delete(0, tk.END)
+        self.Entry1.set_date('01/01/2025')
+        self.Entry1_1.set_date('01/01/2025')
+        self.Text2.config(state='normal')
         self.Text2.delete("1.0", tk.END)
 
 
 if __name__ == '__main__':
     root = tk.Tk()
-    root.withdraw()  #Κρύβει το κύριο παράθυρο
+    root.withdraw()
     top = tk.Toplevel(root)
     top.protocol('WM_DELETE_WINDOW', root.destroy)
     window = MakeAnnouncementScreen(top, root, username='george_tsavos')
