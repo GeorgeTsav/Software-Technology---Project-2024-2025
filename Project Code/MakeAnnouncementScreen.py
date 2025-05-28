@@ -4,7 +4,7 @@ from tkinter.constants import *
 import tkinter.ttk as ttk
 import os.path
 import DBManager
-from tkcalendar import DateEntry  # ✅ ΝΕΟ
+from tkcalendar import DateEntry  
 
 debug = True
 _location = os.path.dirname(__file__)
