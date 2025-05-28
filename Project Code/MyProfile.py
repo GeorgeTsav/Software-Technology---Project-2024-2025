@@ -6,6 +6,8 @@ import os.path
 
 import DBManager
 import MainMenuScreen
+import MyMessagesScreen
+import MyAnnouncementsScreen
 
 _location = os.path.dirname(__file__)
 
@@ -130,8 +132,7 @@ class MyProfile:
         self.MyReviews.configure(text='''My Reviews''')
 
         self.Myreviewlist = tk.Listbox(self.MyProfileframe)
-        self.Myreviewlist.place(relx=0.280, rely=0.610, relheight=0.246
-                , relwidth=0.45)
+        self.Myreviewlist.place(relx=0.280, rely=0.610, relheight=0.246, relwidth=0.45)
         self.Myreviewlist.configure(background="white")
         self.Myreviewlist.configure(disabledforeground="#a3a3a3")
         self.Myreviewlist.configure(font="TkFixedFont")
@@ -143,8 +144,6 @@ class MyProfile:
         
         self.load_Myreviews()
         
-        
-
         self.backbutton = tk.Button(self.MyProfileframe)
         self.backbutton.place(relx=0.799, rely=0.07, height=26, width=57)
         self.backbutton.configure(activebackground="#d9d9d9")
@@ -168,6 +167,7 @@ class MyProfile:
         self.MyMessagesbutton.configure(highlightbackground="#d9d9d9")
         self.MyMessagesbutton.configure(highlightcolor="#000000")
         self.MyMessagesbutton.configure(text='''My Messages''')
+        self.MyMessagesbutton.configure(command=self.openMyMessages)
         
         self.MyAppointmentsbutton = tk.Button(self.MyProfileframe)
         self.MyAppointmentsbutton.place(relx=0.55, rely=0.908, height=26, width=107)
@@ -190,6 +190,7 @@ class MyProfile:
         self.MyAnnouncemetsbutton.configure(highlightbackground="#d9d9d9")
         self.MyAnnouncemetsbutton.configure(highlightcolor="#000000")
         self.MyAnnouncemetsbutton.configure(text='''My Announcemets''')
+        self.MyAnnouncemetsbutton.configure(command=self.openMyAnnouncements)
       
     # Κλείνει το παράθυρο του MyProfile
     def go_back(self):
@@ -245,7 +246,14 @@ class MyProfile:
             previous_window.destroy()
         self.top.deiconify()
        
+    def openMyMessages(self):
+        new_top = tk.Toplevel(self.root)
+        MyMessagesScreen.MyMessagesScreen(new_top, self.username)
 
+    def openMyAnnouncements(self):
+        new_top = tk.Toplevel(self.root)
+        new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
+        MyAnnouncementsScreen.MyAnnouncementsScreen(new_top, self.root, self.username).display(self.top)
 
 if __name__ == '__main__':
     root = tk.Tk()

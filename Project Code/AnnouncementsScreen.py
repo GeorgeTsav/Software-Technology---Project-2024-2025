@@ -268,6 +268,7 @@ class AnnouncementsScreen:
             db.close()
             MessageScreen.MessageScreen.display("There is no announcements", "There is no announcements")
 
+
 if __name__ == '__main__':
     root = tk.Tk()
     root.withdraw()

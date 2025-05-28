@@ -7,6 +7,7 @@ import os.path
 import DBManager
 import MessageScreen
 import IntrestedScreen
+import MyProfile
 
 _location = os.path.dirname(__file__)
 _debug = True
@@ -89,7 +90,8 @@ class MyAnnouncementsScreen:
         self.BackButton = tk.Button(
             self.top,
             text="Back",
-            activebackground="#0080ff"
+            activebackground="#0080ff",
+            command=self.goBack
         )
         self.BackButton.place(relx=0.5, rely=0.93, anchor=tk.CENTER, height=30, width=80)
 
@@ -112,7 +114,6 @@ class MyAnnouncementsScreen:
 
         def showDetails(self):
             pass
-
 
     #Σβήνει το προηγούμενο παράθυρο και εμφανίζει το νέο
     def display(self, previous_window=None):
@@ -148,6 +149,10 @@ class MyAnnouncementsScreen:
         # Ενημερώνει το frame της λίστας για να εμφανίσει τα νέα widgets
         self.list_frame.update_idletasks()
 
+    def goBack(self):
+        new_top = tk.Toplevel(self.root)
+        new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
+        MyProfile.MyProfile(new_top, self.root, self.username).display(self.top)
 
 if __name__ == '__main__':
     root = tk.Tk()

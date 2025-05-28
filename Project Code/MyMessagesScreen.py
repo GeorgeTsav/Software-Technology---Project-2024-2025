@@ -6,10 +6,9 @@ from tkinter import messagebox
 
 class MyMessagesScreen:
     def __init__(self, parent, username):
-        self.parent = parent
         self.username = username
-
-        self.top = tk.Toplevel(parent)
+        self.top = parent
+        
         self.top.title("My Messages")
         self.top.geometry("600x600")
         self.top.configure(bg="#f0f0f0")

@@ -7,6 +7,7 @@ import os.path
 
 import MyProfile
 import Make_Search_Announcemnt_Screen
+import eshopScreen
 
 _location = os.path.dirname(__file__)
 _debug = True
@@ -82,6 +83,7 @@ class MainMenuScreen:
         self.eshopButton.configure(highlightbackground="#d9d9d9")
         self.eshopButton.configure(highlightcolor="#000000")
         self.eshopButton.configure(text='''e-shop''')
+        self.eshopButton.configure(command=self.open_eshopScreen)
 
         self.MyProfileButton = tk.Button(self.MenuBarFrame)
         self.MyProfileButton.place(relx=0.075, rely=0.295, height=26, width=65)
@@ -133,6 +135,11 @@ class MainMenuScreen:
         new_top = tk.Toplevel(self.root)
         new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
         Make_Search_Announcemnt_Screen.Make_Search_Announcemnts_Screen(new_top, self.root, self.username).display(self.top)
+
+    def open_eshopScreen(self):
+        new_top = tk.Toplevel(self.root)
+        new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
+        eshopScreen.eshopScreen(new_top, self.root, self.username).display(self.top)
 
     #Σβήνει το προηγούμενο παράθυρο και εμφανίζει το νέο
     def display(self, previous_window=None):

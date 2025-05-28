@@ -21,26 +21,26 @@ class MessageTextScreen:
         self.message_entry.pack(pady=5)
 
         send_btn = tk.Button(self.top, text="Send", bg="#0078d7", fg="white", font=("Segoe UI", 10),
-                             command=self.send_message)
+                             command=self.forwardMessage)
         send_btn.pack(pady=(10, 20))
 
-    def send_message(self):
+    def forwardMessage (self):
         content = self.message_entry.get("1.0", tk.END).strip()
 
         if not content:
-            messagebox.showwarning("Empty Message", "Please enter a message.")
+            MessageScreen.MessageScreen.display("Message must not be empty.")
             return
 
         if len(content) > 150:
-            MessageScreen.MessageScreen.display("Error", "Message must be 150 characters or fewer.")
+            MessageScreen.MessageScreen.display("Message must be 150 characters or fewer.")
             return
         
         if self.username == self.receiver:
-            MessageScreen.MessageScreen.display("Error", "You cannot send a message to yourself.")
+            MessageScreen.MessageScreen.display("You cannot send a message to yourself.")
             return
         
         if self.receiver == "System":
-            MessageScreen.MessageScreen.display("Error", "You cannot send a message to the System.")
+            MessageScreen.MessageScreen.display("You cannot send a message to the System.")
             return
 
         try:
@@ -49,4 +49,4 @@ class MessageTextScreen:
             MessageScreen.MessageScreen.display("Message Sent", "Your message was sent successfully.")
             self.top.destroy()
         except Exception as e:
-            MessageScreen.MessageScreen.display("Error", "Failed to send the message.")
+            MessageScreen.MessageScreen.display("Failed to send the message.")
