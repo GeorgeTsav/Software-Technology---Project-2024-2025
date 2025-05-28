@@ -76,12 +76,12 @@ class MakeAnnouncementScreen:
         self.Text2 = tk.Text(self.Frame1, wrap="word")
         self.Text2.place(relx=0.462, rely=0.656, relheight=0.294, relwidth=0.514)
 
-        # Κουμπί Upload
-        self.Button1 = tk.Button(self.Frame1, text='Upload', background="#0080ff", command=self.upload_announcement)
+        # Κουμπί Make
+        self.Button1 = tk.Button(self.Frame1, text='Make', background="#0080ff", command=self.upload_announcement)
         self.Button1.place(relx=0.022, rely=0.906, height=26, width=60)
 
-        # Κουμπί Delete
-        self.Button2 = tk.Button(self.Frame1, text='Delete', background="#0080ff", command=self.clear_fields)
+        # Κουμπί Upload
+        self.Button2 = tk.Button(self.Frame1, text='Upload', background="#0080ff", command=self.clear_fields)
         self.Button2.place(relx=0.154, rely=0.906, height=26, width=60)
 
         self.db = DBManager.DBManager(host='localhost', user='root', password='', database='petato_db')
