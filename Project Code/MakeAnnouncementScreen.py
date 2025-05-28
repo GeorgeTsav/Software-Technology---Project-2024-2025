@@ -17,40 +17,22 @@ _bgmode = 'light'
 _tabbg1 = '#d9d9d9'
 _tabbg2 = 'gray40'
 
-_style_code_ran = 0
-def _style_code():
-    global _style_code_ran
-    if _style_code_ran:
-        return
-    try:
-        MakeAnnouncementScreen.root.tk.call(
-            'source',
-            os.path.join(_location, 'themes', 'default.tcl')
-        )
-    except:
-        pass
-    style = ttk.Style()
-    style.theme_use('default')
-    style.configure('.', font="TkDefaultFont")
-    if sys.platform == "win32":
-        style.theme_use('winnative')
-    _style_code_ran = 1
 
 class MakeAnnouncementScreen:
-    def __init__(self, top=None):
-        '''This class configures and populates the toplevel window.
-           top is the toplevel containing window.'''
-
-        top.geometry("600x450+468+138")
-        top.minsize(120, 1)
-        top.maxsize(1540, 845)
-        top.resizable(1, 1)
-        top.title("Petato")
-        top.configure(background="#d9d9d9")
-        top.configure(highlightbackground="#d9d9d9")
-        top.configure(highlightcolor="#000000")
-
+    def __init__(self, top=None, root=None, username=None):
+        self.username = username
+        self.root = root
         self.top = top
+
+        self.top.geometry("600x450+468+138")
+        self.top.minsize(120, 1)
+        self.top.maxsize(1540, 845)
+        self.top.resizable(1, 1)
+        self.top.title("Petato")
+        self.top.configure(background="#d9d9d9")
+        self.top.configure(highlightbackground="#d9d9d9")
+        self.top.configure(highlightcolor="#000000")
+
         self.combobox = tk.StringVar()
         self.announcement_type = tk.StringVar()
         self.pet_type = tk.StringVar()
@@ -77,7 +59,7 @@ class MakeAnnouncementScreen:
         self.Label1_2_1.configure(highlightbackground="#d9d9d9")
         self.Label1_2_1.configure(highlightcolor="#000000")
         self.Label1_2_1.configure(relief="groove")
-        self.Label1_2_1.configure(text='Host_end_date')
+        self.Label1_2_1.configure(text='Host End Date')
 
         self.Label1_2 = tk.Label(self.Frame1)
         self.Label1_2.place(relx=0.022, rely=0.391, height=25, width=100)
@@ -92,9 +74,9 @@ class MakeAnnouncementScreen:
         self.Label1_2.configure(highlightbackground="#d9d9d9")
         self.Label1_2.configure(highlightcolor="#000000")
         self.Label1_2.configure(relief="groove")
-        self.Label1_2.configure(text='Host_start_date')
+        self.Label1_2.configure(text='Host Start Date')
 
-        _style_code()
+        
         self.TCombobox1_1 = ttk.Combobox(self.Frame1)
         self.TCombobox1_1.place(relx=0.149, rely=0.281, relheight=0.078, relwidth=0.22)
         self.value_list = ['DOG', 'CAT']
@@ -161,15 +143,7 @@ class MakeAnnouncementScreen:
         vcmd = (self.Frame1.register(self.validate_date), '%P')
         self.Entry1 = tk.Entry(self.Frame1, validate='focusout', validatecommand=vcmd)
         self.Entry1.place(relx=0.268, rely=0.391, height=25, relwidth=0.253)
-        self.Entry1.configure(background="white")
-        self.Entry1.configure(disabledforeground="#a3a3a3")
-        self.Entry1.configure(font="-family {Courier New} -size 10")
-        self.Entry1.configure(foreground="#000000")
-        self.Entry1.configure(highlightbackground="#d9d9d9")
-        self.Entry1.configure(highlightcolor="#000000")
-        self.Entry1.configure(insertbackground="#000000")
-        self.Entry1.configure(selectbackground="#d9d9d9")
-        self.Entry1.configure(selectforeground="black")
+        self.Entry1.insert(0, "01/01/2025")  # Default value
 
         # Host_end_date
         self.Entry1_1 = tk.Entry(self.Frame1, validate='focusout', validatecommand=vcmd)
@@ -216,7 +190,7 @@ class MakeAnnouncementScreen:
         self.Label1_3.configure(highlightbackground="#d9d9d9")
         self.Label1_3.configure(highlightcolor="#000000")
         self.Label1_3.configure(relief="groove")
-        self.Label1_3.configure(text='Description')
+        self.Label1_3.configure(text='Adopt Description')
 
         self.Button1 = tk.Button(self.Frame1)
         self.Button1.place(relx=0.022, rely=0.906, height=26, width=47)
@@ -264,11 +238,14 @@ class MakeAnnouncementScreen:
         if self.announcement_type.get() == 'HOST':
             self.Entry1.config(state='normal')
             self.Entry1_1.config(state='normal')
+            self.Text2.delete("1.0", tk.END)
+            self.Text2.config(state='disabled')  # Disable Adopt Description
         else:
             self.Entry1.delete(0, tk.END)
             self.Entry1_1.delete(0, tk.END)
             self.Entry1.config(state='disabled')
             self.Entry1_1.config(state='disabled')
+            self.Text2.config(state='normal')    # Enable Adopt Description
 
     def validate_date(self, value):
         # Επιτρέπει κενό ή ΗΗ/ΜΜ/ΕΕΕΕ
@@ -277,13 +254,13 @@ class MakeAnnouncementScreen:
         return bool(re.match(r'^\d{2}/\d{2}/\d{4}$', value))
 
     def upload_announcement(self):
+        ann_user = self.username
         ann_type = self.announcement_type.get()
         ann_pet = self.pet_type.get()
         ann_title = self.Text1.get("1.0", tk.END).strip()
         host_start_date = self.Entry1.get() if ann_type == 'HOST' else None
         host_end_date = self.Entry1_1.get() if ann_type == 'HOST' else None
-        adopt_description = self.Text2.get("1.0", tk.END).strip()
-        ann_user = 'spiros'  
+        adopt_description = self.Text2.get() if ann_type == 'ADOPTION' else None
 
         query = """
             INSERT INTO announcements
@@ -291,6 +268,7 @@ class MakeAnnouncementScreen:
             VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
         params = (ann_title, ann_type, ann_pet, adopt_description, host_start_date, host_end_date, ann_user)
+        print(f"Executing query: {query} with params: {params}")
         self.db.execute_query(query, params)
         self.db.connection.commit()  # Για να αποθηκευτούν οι αλλαγές
 
@@ -302,13 +280,11 @@ class MakeAnnouncementScreen:
         self.Entry1_1.delete(0, tk.END)
         self.Text2.delete("1.0", tk.END)
 
-def start_up():
-    MakeAnnouncementScreen.main()
 
 if __name__ == '__main__':
     root = tk.Tk()
     root.withdraw()  #Κρύβει το κύριο παράθυρο
     top = tk.Toplevel(root)
     top.protocol('WM_DELETE_WINDOW', root.destroy)
-    window = MakeAnnouncementScreen(top)
+    window = MakeAnnouncementScreen(top, root, username='spiros')
     root.mainloop()
