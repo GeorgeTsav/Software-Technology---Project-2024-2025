@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Εξυπηρετητής: 127.0.0.1
--- Χρόνος δημιουργίας: 27 Μάη 2025 στις 08:50:58
--- Έκδοση διακομιστή: 10.4.32-MariaDB
--- Έκδοση PHP: 8.2.12
+-- Host: 127.0.0.1
+-- Generation Time: May 24, 2025 at 10:06 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,25 +18,20 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Βάση δεδομένων: `petato_db`
+-- Database: `petato_db`
 --
 
 -- --------------------------------------------------------
 
 --
--- Δομή πίνακα για τον πίνακα `announcements`
+-- Table structure for table `announcements`
 --
 
 CREATE TABLE `announcements` (
   `ann_id` int(11) NOT NULL,
   `ann_title` varchar(40) NOT NULL,
   `ann_type` enum('ADOPTION','HOST','','') NOT NULL,
-  `ann_species` enum('CAT','DOG') NOT NULL,
-  `ann_gender` enum('MALE','FEMALE','','') NOT NULL,
-  `ann_region` varchar(20) NOT NULL,
-  `ann_vaccin` enum('YES','NO','','') NOT NULL,
-  `ann_age` int(2) UNSIGNED NOT NULL,
-  `ann_conntact` int(10) NOT NULL,
+  `ann_pet` enum('CAT','DOG') NOT NULL,
   `adopt_description` varchar(150) DEFAULT NULL,
   `host_start_date` date DEFAULT NULL,
   `host_end_date` date DEFAULT NULL,
@@ -45,17 +40,18 @@ CREATE TABLE `announcements` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Άδειασμα δεδομένων του πίνακα `announcements`
+-- Dumping data for table `announcements`
 --
 
-INSERT INTO `announcements` (`ann_id`, `ann_title`, `ann_type`, `ann_species`, `ann_gender`, `ann_region`, `ann_vaccin`, `ann_age`, `ann_conntact`, `adopt_description`, `host_start_date`, `host_end_date`, `ann_user`, `ann_date`) VALUES
-(1, 'emmhbyjh', 'ADOPTION', 'DOG', 'MALE', '', 'YES', 0, 0, ',;lkmhjbh fngchvbjnm,mnbkjchvrhdtfygh', '2025-05-26', '2025-06-12', 'spiros', '2025-05-25 17:31:00'),
-(8, '', '', '', 'MALE', '', 'YES', 0, 0, NULL, NULL, NULL, 'spiros', '2025-05-25 17:38:13');
+INSERT INTO `announcements` (`ann_id`, `ann_title`, `ann_type`, `ann_pet`, `adopt_description`, `host_start_date`, `host_end_date`, `ann_user`, `ann_date`) VALUES
+(1, 'Dog Adoption!', 'ADOPTION', 'DOG', 'Beautifull Little Dog!', NULL, NULL, 'george_tsavos', '2025-05-23 11:04:03'),
+(2, 'Cat Hosting', 'HOST', 'CAT', 'I can host cats only because i am alergic to dogs :).', '2025-05-31', '2025-06-18', 'george_tsavos', '2025-05-23 11:05:11'),
+(3, 'Cat Adoption', 'ADOPTION', 'CAT', 'CATTTTTTt', NULL, NULL, 'george_tsavos', '2025-05-24 10:49:25');
 
 -- --------------------------------------------------------
 
 --
--- Δομή πίνακα για τον πίνακα `appointments`
+-- Table structure for table `appointments`
 --
 
 CREATE TABLE `appointments` (
@@ -68,7 +64,7 @@ CREATE TABLE `appointments` (
 -- --------------------------------------------------------
 
 --
--- Δομή πίνακα για τον πίνακα `eshop_items`
+-- Table structure for table `eshop_items`
 --
 
 CREATE TABLE `eshop_items` (
@@ -81,7 +77,7 @@ CREATE TABLE `eshop_items` (
 -- --------------------------------------------------------
 
 --
--- Δομή πίνακα για τον πίνακα `eshop_payments`
+-- Table structure for table `eshop_payments`
 --
 
 CREATE TABLE `eshop_payments` (
@@ -94,7 +90,7 @@ CREATE TABLE `eshop_payments` (
 -- --------------------------------------------------------
 
 --
--- Δομή πίνακα για τον πίνακα `interested_users`
+-- Table structure for table `interested_users`
 --
 
 CREATE TABLE `interested_users` (
@@ -102,10 +98,19 @@ CREATE TABLE `interested_users` (
   `int_ann` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `interested_users`
+--
+
+INSERT INTO `interested_users` (`int_user`, `int_ann`) VALUES
+('giwrgos1', 3),
+('giwrgos2', 1),
+('giwrgos2', 2);
+
 -- --------------------------------------------------------
 
 --
--- Δομή πίνακα για τον πίνακα `messages`
+-- Table structure for table `messages`
 --
 
 CREATE TABLE `messages` (
@@ -116,10 +121,17 @@ CREATE TABLE `messages` (
   `msg_text` varchar(150) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `messages`
+--
+
+INSERT INTO `messages` (`msg_id`, `msg_date`, `msg_sender`, `msg_receiver`, `msg_text`) VALUES
+(2, '2025-05-24 11:05:28', 'System', 'giwrgos2', 'You have been approved by the owner of the announcement 1.');
+
 -- --------------------------------------------------------
 
 --
--- Δομή πίνακα για τον πίνακα `my_appointments`
+-- Table structure for table `my_appointments`
 --
 
 CREATE TABLE `my_appointments` (
@@ -131,7 +143,7 @@ CREATE TABLE `my_appointments` (
 -- --------------------------------------------------------
 
 --
--- Δομή πίνακα για τον πίνακα `personal_diary`
+-- Table structure for table `personal_diary`
 --
 
 CREATE TABLE `personal_diary` (
@@ -141,21 +153,23 @@ CREATE TABLE `personal_diary` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Άδειασμα δεδομένων του πίνακα `personal_diary`
+-- Dumping data for table `personal_diary`
 --
 
 INSERT INTO `personal_diary` (`per_diary_date`, `per_diary_user`, `per_diary_text`) VALUES
-('2025-05-01', 'george_tsavos', 'Test'),
-('2025-05-02', 'george_tsavos', '215654165'),
+('2025-04-10', 'george_tsavos', 'ssfsfs'),
+('2025-05-01', 'george_tsavos', ''),
+('2025-05-05', 'george_tsavos', 'znbnzm'),
 ('2025-05-08', 'george_tsavos', 'PAME LIGO'),
 ('2025-05-14', 'george_tsavos', ''),
-('2025-05-15', 'george_tsavos', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
-('2025-05-16', 'george_tsavos', '!!!');
+('2025-05-15', 'george_tsavos', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
+('2025-05-16', 'george_tsavos', '!!!'),
+('2025-05-27', 'george_tsavos', 'adadadad');
 
 -- --------------------------------------------------------
 
 --
--- Δομή πίνακα για τον πίνακα `review`
+-- Table structure for table `review`
 --
 
 CREATE TABLE `review` (
@@ -170,7 +184,7 @@ CREATE TABLE `review` (
 -- --------------------------------------------------------
 
 --
--- Δομή πίνακα για τον πίνακα `user`
+-- Table structure for table `user`
 --
 
 CREATE TABLE `user` (
@@ -182,17 +196,19 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Άδειασμα δεδομένων του πίνακα `user`
+-- Dumping data for table `user`
 --
 
 INSERT INTO `user` (`username`, `name`, `last_name`, `telephone`, `password`) VALUES
 ('george_tsavos', 'George', 'Tsavos', '6969696969', '1084606'),
-('spiros', 'spiros', 'drivilas', '6988511674', '1100543');
+('giwrgos1', 'George', 'Tsav', '6969696969', '1084606'),
+('giwrgos2', 'George', 'Tsava', '6969696969', '1084606'),
+('SYSTEM', 'unknown', 'unknown', 'unknown', 'unknown');
 
 -- --------------------------------------------------------
 
 --
--- Δομή πίνακα για τον πίνακα `vet`
+-- Table structure for table `vet`
 --
 
 CREATE TABLE `vet` (
@@ -204,31 +220,31 @@ CREATE TABLE `vet` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Ευρετήρια για άχρηστους πίνακες
+-- Indexes for dumped tables
 --
 
 --
--- Ευρετήρια για πίνακα `announcements`
+-- Indexes for table `announcements`
 --
 ALTER TABLE `announcements`
   ADD PRIMARY KEY (`ann_id`),
   ADD KEY `ann_user` (`ann_user`);
 
 --
--- Ευρετήρια για πίνακα `appointments`
+-- Indexes for table `appointments`
 --
 ALTER TABLE `appointments`
   ADD PRIMARY KEY (`app_id`),
   ADD KEY `app_vet` (`app_vet`);
 
 --
--- Ευρετήρια για πίνακα `eshop_items`
+-- Indexes for table `eshop_items`
 --
 ALTER TABLE `eshop_items`
   ADD PRIMARY KEY (`item_name`);
 
 --
--- Ευρετήρια για πίνακα `eshop_payments`
+-- Indexes for table `eshop_payments`
 --
 ALTER TABLE `eshop_payments`
   ADD PRIMARY KEY (`payment_id`),
@@ -236,14 +252,14 @@ ALTER TABLE `eshop_payments`
   ADD KEY `payments_item` (`payment_item`);
 
 --
--- Ευρετήρια για πίνακα `interested_users`
+-- Indexes for table `interested_users`
 --
 ALTER TABLE `interested_users`
-  ADD KEY `int_user` (`int_user`),
+  ADD PRIMARY KEY (`int_user`,`int_ann`),
   ADD KEY `int_ann` (`int_ann`);
 
 --
--- Ευρετήρια για πίνακα `messages`
+-- Indexes for table `messages`
 --
 ALTER TABLE `messages`
   ADD PRIMARY KEY (`msg_id`),
@@ -251,21 +267,21 @@ ALTER TABLE `messages`
   ADD KEY `msg_receiver` (`msg_receiver`);
 
 --
--- Ευρετήρια για πίνακα `my_appointments`
+-- Indexes for table `my_appointments`
 --
 ALTER TABLE `my_appointments`
   ADD KEY `app_id` (`my_app_id`),
   ADD KEY `app_user` (`my_app_user`);
 
 --
--- Ευρετήρια για πίνακα `personal_diary`
+-- Indexes for table `personal_diary`
 --
 ALTER TABLE `personal_diary`
   ADD PRIMARY KEY (`per_diary_date`,`per_diary_user`),
   ADD KEY `per_diary_user` (`per_diary_user`);
 
 --
--- Ευρετήρια για πίνακα `review`
+-- Indexes for table `review`
 --
 ALTER TABLE `review`
   ADD PRIMARY KEY (`rev_id`),
@@ -273,110 +289,109 @@ ALTER TABLE `review`
   ADD KEY `rev_user` (`rev_user`);
 
 --
--- Ευρετήρια για πίνακα `user`
+-- Indexes for table `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`username`),
-  ADD UNIQUE KEY `password` (`password`);
+  ADD PRIMARY KEY (`username`);
 
 --
--- Ευρετήρια για πίνακα `vet`
+-- Indexes for table `vet`
 --
 ALTER TABLE `vet`
   ADD PRIMARY KEY (`vet_id`);
 
 --
--- AUTO_INCREMENT για άχρηστους πίνακες
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT για πίνακα `announcements`
+-- AUTO_INCREMENT for table `announcements`
 --
 ALTER TABLE `announcements`
-  MODIFY `ann_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `ann_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT για πίνακα `appointments`
+-- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
   MODIFY `app_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT για πίνακα `eshop_payments`
+-- AUTO_INCREMENT for table `eshop_payments`
 --
 ALTER TABLE `eshop_payments`
   MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT για πίνακα `messages`
+-- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `msg_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `msg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT για πίνακα `review`
+-- AUTO_INCREMENT for table `review`
 --
 ALTER TABLE `review`
   MODIFY `rev_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT για πίνακα `vet`
+-- AUTO_INCREMENT for table `vet`
 --
 ALTER TABLE `vet`
   MODIFY `vet_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- Περιορισμοί για άχρηστους πίνακες
+-- Constraints for dumped tables
 --
 
 --
--- Περιορισμοί για πίνακα `announcements`
+-- Constraints for table `announcements`
 --
 ALTER TABLE `announcements`
   ADD CONSTRAINT `ann_user` FOREIGN KEY (`ann_user`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Περιορισμοί για πίνακα `appointments`
+-- Constraints for table `appointments`
 --
 ALTER TABLE `appointments`
   ADD CONSTRAINT `app_vet` FOREIGN KEY (`app_vet`) REFERENCES `vet` (`vet_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Περιορισμοί για πίνακα `eshop_payments`
+-- Constraints for table `eshop_payments`
 --
 ALTER TABLE `eshop_payments`
   ADD CONSTRAINT `payment_user` FOREIGN KEY (`payment_user`) REFERENCES `user` (`username`),
   ADD CONSTRAINT `payments_item` FOREIGN KEY (`payment_item`) REFERENCES `eshop_items` (`item_name`);
 
 --
--- Περιορισμοί για πίνακα `interested_users`
+-- Constraints for table `interested_users`
 --
 ALTER TABLE `interested_users`
-  ADD CONSTRAINT `int_ann` FOREIGN KEY (`int_ann`) REFERENCES `announcements` (`ann_id`),
+  ADD CONSTRAINT `int_ann` FOREIGN KEY (`int_ann`) REFERENCES `announcements` (`ann_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `int_user` FOREIGN KEY (`int_user`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Περιορισμοί για πίνακα `messages`
+-- Constraints for table `messages`
 --
 ALTER TABLE `messages`
   ADD CONSTRAINT `msg_receiver` FOREIGN KEY (`msg_receiver`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `msg_sender` FOREIGN KEY (`msg_sender`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Περιορισμοί για πίνακα `my_appointments`
+-- Constraints for table `my_appointments`
 --
 ALTER TABLE `my_appointments`
   ADD CONSTRAINT `app_id` FOREIGN KEY (`my_app_id`) REFERENCES `appointments` (`app_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `app_user` FOREIGN KEY (`my_app_user`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Περιορισμοί για πίνακα `personal_diary`
+-- Constraints for table `personal_diary`
 --
 ALTER TABLE `personal_diary`
   ADD CONSTRAINT `per_diary_user` FOREIGN KEY (`per_diary_user`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Περιορισμοί για πίνακα `review`
+-- Constraints for table `review`
 --
 ALTER TABLE `review`
   ADD CONSTRAINT `rev_user` FOREIGN KEY (`rev_user`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE,

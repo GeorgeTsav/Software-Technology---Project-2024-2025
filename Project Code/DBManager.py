@@ -1,5 +1,4 @@
 import mysql.connector
-
 class DBManager:
     def __init__(self, host='localhost', user='root', password='', database=''):
         self.host = host

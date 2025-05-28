@@ -4,7 +4,6 @@ import tkinter.ttk as ttk
 from tkinter.constants import *
 import os.path
 from PIL import Image, ImageTk
-
 import DBManager
 import MainMenuScreen
 import MessageScreen
