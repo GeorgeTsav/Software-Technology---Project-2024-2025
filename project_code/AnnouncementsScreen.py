@@ -239,7 +239,7 @@ class AnnouncementsScreen:
         else:
             db_cursor.close()
             db.close()
-            MessageScreen.MessageScreen.display("There is no announcements", "There is no announcements")
+            MessageScreen.MessageScreen.display(self.top,"There are no announcements")
 
 if __name__ == '__main__':
     root = tk.Tk()
