@@ -19,9 +19,8 @@ _tabbg1 = '#d9d9d9'
 _tabbg2 = 'gray40' 
 
 class OtherProfile:
-    def __init__(self, top=None, root=None, username=None, logged_in_user=None):
+    def __init__(self, top=None, username=None, logged_in_user=None):
         self.top = top
-        self.root = root
         self.username = username
         self.logged_in_user = logged_in_user
 
@@ -165,22 +164,11 @@ class OtherProfile:
         self.backbutton.configure(command=self.go_back)
         
         self.load_reviews()
-        
-    def display(self, previous_window=None):
-        if previous_window is not None:
-            previous_window.destroy()
-        self.top.deiconify()
-    
-    
-     # Κλείνει το παράθυρο του MyProfile
-   
+
+    # Κλείνει το παράθυρο του MyProfile
     def go_back(self):
-      if self.root is not None:
-        new_top = tk.Toplevel(self.root)
-        new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
-        MainMenuScreen.MainMenuScreen(new_top, self.root, self.logged_in_user).display(self.top)
-      elif self.top is not None:
-         self.top.destroy()
+        if self.top is not None:
+            self.top.destroy()
 
     #for pop up review screen
     def open_review_screen(self):
@@ -246,7 +234,7 @@ if __name__ == '__main__':
     root.withdraw()  #Κρύβει το κύριο παράθυρο
     top = tk.Toplevel(root)
     top.protocol('WM_DELETE_WINDOW', root.destroy)
-    window = OtherProfile(top, root, username="george_tsavos", logged_in_user="giwrgos2")
+    window = OtherProfile(top, username="george_tsavos", logged_in_user="giwrgos2")
     root.mainloop()
 
 

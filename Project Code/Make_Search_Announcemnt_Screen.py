@@ -6,6 +6,7 @@ import os.path
 
 import MainMenuScreen
 import AnnouncementsScreen
+import MakeAnnouncementScreen
 
 _location = os.path.dirname(__file__)
 _debug = True
@@ -72,6 +73,7 @@ class Make_Search_Announcemnts_Screen:
         self.Make_Ann_Button.configure(highlightbackground="#d9d9d9")
         self.Make_Ann_Button.configure(highlightcolor="#000000")
         self.Make_Ann_Button.configure(text='''Make an Announcemnt''')
+        self.Make_Ann_Button.configure(command=self.openMakeAnnouncemntScreen)
 
         self.Search_Ann_Button = tk.Button(self.Make_Search_Frame)
         self.Search_Ann_Button.place(relx=0.372, rely=0.494, height=46, width=177)
@@ -110,7 +112,9 @@ class Make_Search_Announcemnts_Screen:
         AnnouncementsScreen.AnnouncementsScreen(new_top, self.root, self.username).display(self.top)
 
     def openMakeAnnouncemntScreen(self):
-        pass
+        new_top = tk.Toplevel(self.root)
+        new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
+        MakeAnnouncementScreen.MakeAnnouncementScreen(new_top, self.root, self.username).display(self.top)
 
     def go_back(self):
         new_top = tk.Toplevel(self.root)

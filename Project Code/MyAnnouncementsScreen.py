@@ -8,6 +8,7 @@ import DBManager
 import MessageScreen
 import IntrestedScreen
 import MyProfile
+import EditAnnouncementScreen
 
 _location = os.path.dirname(__file__)
 _debug = True
@@ -114,7 +115,7 @@ class MyAnnouncementsScreen:
             IntrestedScreen.InterestedScreen(tk.Toplevel(), self.root, self.ann_id)
 
         def showDetails(self):
-            pass
+            EditAnnouncementScreen.EditAnnouncementScreen(tk.Toplevel(), ann_id=self.ann_id)
 
     #Σβήνει το προηγούμενο παράθυρο και εμφανίζει το νέο
     def display(self, previous_window=None):

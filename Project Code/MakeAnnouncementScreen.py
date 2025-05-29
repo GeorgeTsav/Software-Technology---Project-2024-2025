@@ -3,9 +3,11 @@ import tkinter as tk
 from tkinter.constants import *
 import tkinter.ttk as ttk
 import os.path
-import DBManager
 from tkcalendar import DateEntry
+
+import DBManager
 import MessageScreen
+import MainMenuScreen
 
 debug = True
 _location = os.path.dirname(__file__)
@@ -86,10 +88,13 @@ class MakeAnnouncementScreen:
 
         # Κουμπί Clear All
         self.Button2 = tk.Button(self.Frame1, text='Clear all', background="#0080ff", command=self.clear_fields)
-        self.Button2.place(relx=0.154, rely=0.906, height=26, width=60)
+        self.Button2.place(relx=0.16, rely=0.906, height=26, width=60)
 
         # DBManager instance, χωρίς να ανοίγει σύνδεση αμέσως
         self.db = DBManager.DBManager(database='petato_db')
+
+        #Για όταν κλείνει το παράθυρο
+        self.top.protocol('WM_DELETE_WINDOW', self.goBack)
 
     def on_type_change(self, event=None):
         if self.announcement_type.get() == 'HOST':
@@ -114,7 +119,7 @@ class MakeAnnouncementScreen:
         adopt_description = self.Text2.get("1.0", "end-1c") if ann_type == 'ADOPTION' else None
 
         if not ann_title or not ann_type or not ann_pet:
-            MessageScreen.MessageScreen.display("Please fill in all required fields!")
+            MessageScreen.MessageScreen().display("Please fill in all required fields!")
             return
 
         try:
@@ -128,10 +133,10 @@ class MakeAnnouncementScreen:
             cursor.execute(query, (ann_title, ann_type, ann_pet, adopt_description, host_start_date, host_end_date, ann_user))
             self.db.connection.commit()
             cursor.close()
-            MessageScreen.MessageScreen.display(self.top,"Announcement uploaded successfully!")
+            MessageScreen.MessageScreen().display("Announcement uploaded successfully!")
             self.clear_fields()
         except Exception as e:
-            MessageScreen.MessageScreen.display(self.top,"Failed to upload announcement")
+            MessageScreen.MessageScreen().display("Failed to upload announcement")
         finally:
             self.db.close()
 
@@ -139,10 +144,21 @@ class MakeAnnouncementScreen:
         self.announcement_type.set('')
         self.pet_type.set('')
         self.Text1.delete("1.0", tk.END)
-        self.Entry1.set_date('01/01/2025')
-        self.Entry1_1.set_date('01/01/2025')
+        self.Entry1.set_date(None)
+        self.Entry1_1.set_date(None)
         self.Text2.config(state='normal')
         self.Text2.delete("1.0", tk.END)
+
+    def display(self, previous_window=None):
+        if previous_window is not None:
+            previous_window.destroy()
+        self.top.deiconify()
+
+    def goBack(self):
+        new_window = tk.Toplevel(self.root)
+        new_window.protocol('WM_DELETE_WINDOW', new_window.destroy)
+        main_menu_screen = MainMenuScreen.MainMenuScreen(top=new_window, root=self.root)
+        main_menu_screen.display(previous_window=self.top)
 
 
 if __name__ == '__main__':

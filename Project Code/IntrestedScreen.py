@@ -22,11 +22,10 @@ _tabbg2 = 'gray40'
 
 
 class InterestedScreen:
-    def __init__(self, top=None, root=None, username=None, ann_id=None):
+    def __init__(self, top=None, username=None, ann_id=None):
         self.username = username
         self.ann_id = ann_id
         self.top = top
-        self.root = root
 
         self.top.geometry("610x299+850+200")
         self.top.minsize(120, 1)
@@ -74,13 +73,11 @@ class InterestedScreen:
         self.searchInterested()
     
     class InterestedWidget(tk.Frame):
-        def __init__(self, top, root, int_user, ann_id, logged_in_user=None, *args, **kwargs):
+        def __init__(self, top, int_user, ann_id, logged_in_user, *args, **kwargs):
             super().__init__(top, *args, **kwargs)
 
             self.int_user = int_user
             self.ann_id = ann_id
-            self.root = root
-            self.top = top
             self.logged_in_user = logged_in_user
 
             self.configure(bg="#ffffff", relief="ridge", bd=1)
@@ -128,7 +125,7 @@ class InterestedScreen:
             self.destroy()
         
         def openOtherProfile(self):
-            OtherProfile.OtherProfile(top=tk.Toplevel(self.root), username=self.int_user, logged_in_user=self.logged_in_user)
+            OtherProfile.OtherProfile(top=tk.Toplevel(), username=self.int_user, logged_in_user=self.logged_in_user)
 
     def searchInterested(self):
         # Καθαρίζει το frame της λίστας από προηγούμενα widgets
@@ -144,7 +141,7 @@ class InterestedScreen:
         # Δημιουργεί ένα MyAnnouncementWidget για κάθε ανακοίνωση
         if results:
             for int_user in results:
-                widget = self.InterestedWidget(self.list_frame, self.root, int_user[0], self.ann_id, self.username)
+                widget = self.InterestedWidget(self.list_frame, int_user[0], self.ann_id, self.username)
                 widget.pack(fill=tk.X, pady=4, padx=4)
             
             db_cursor.close()
@@ -165,5 +162,5 @@ if __name__ == '__main__':
     top = tk.Toplevel(root)
     top.protocol('WM_DELETE_WINDOW', root.destroy)
     ann_id = 3
-    window = InterestedScreen(top, root, username="george_tsavos", ann_id=ann_id)
+    window = InterestedScreen(top, username="george_tsavos", ann_id=ann_id)
     root.mainloop()
