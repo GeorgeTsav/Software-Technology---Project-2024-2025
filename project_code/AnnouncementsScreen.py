@@ -2,10 +2,9 @@ import sys
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.constants import *
-from tkcalendar import Calendar
+from tkcalendar import Calendar, DateEntry
 from datetime import datetime
 import os.path
-
 import DBManager
 import MessageScreen
 import MessageTextScreen
@@ -54,7 +53,6 @@ class AnnouncementsScreen:
         self.main_frame.columnconfigure(1, weight=1)
         self.main_frame.rowconfigure(0, weight=1)
 
-        # === SCROLLABLE LEFT PANEL ===
         left_canvas = tk.Canvas(self.main_frame, bg=_bgcolor, highlightthickness=0)
         left_scrollbar = ttk.Scrollbar(self.main_frame, orient="vertical", command=left_canvas.yview)
         left_scrollbar.grid(row=0, column=0, sticky="nse")
@@ -90,25 +88,17 @@ class AnnouncementsScreen:
         self.hospitality = tk.Checkbutton(self.left_panel, text="HOSPITALITY", variable=self.che53, bg=_bgcolor, anchor="w")
         self.hospitality.pack(anchor="w", padx=10)
 
-        tk.Label(self.left_panel, text="From Date:", bg=_bgcolor).pack(anchor="w", padx=10, pady=(10, 0))
-        self.from_date_entry = tk.Entry(self.left_panel)
-        self.from_date_entry.pack(anchor="w", padx=10)
+        tk.Label(self.left_panel, text="Start Date:", bg=_bgcolor).pack(anchor="w", padx=10, pady=(10, 0))
+        self.start_date = DateEntry(self.left_panel, date_pattern='yyyy-mm-dd')
+        self.start_date.pack(anchor="w", padx=10)
 
-        tk.Label(self.left_panel, text="To Date:", bg=_bgcolor).pack(anchor="w", padx=10, pady=(10, 0))
-        self.to_date_entry = tk.Entry(self.left_panel)
-        self.to_date_entry.pack(anchor="w", padx=10)
-
-        self.calendar = Calendar(self.left_panel, selectmode='day', date_pattern='yyyy-mm-dd')
-        self.calendar.pack(padx=10, pady=10, fill="x")
+        tk.Label(self.left_panel, text="End Date:", bg=_bgcolor).pack(anchor="w", padx=10, pady=(10, 0))
+        self.end_date = DateEntry(self.left_panel, date_pattern='yyyy-mm-dd')
+        self.end_date.pack(anchor="w", padx=10)
 
         self.SearchButton = tk.Button(self.left_panel, text="SEARCH", bg="#0000ff", fg="white",
                                       font="-family {Segoe UI} -size 9", command=self.search_announcements)
         self.SearchButton.pack(pady=(10, 20), padx=10, fill="x")
-
-        self.active_date_field = None
-        self.from_date_entry.bind("<FocusIn>", lambda e: self.set_active_date_field(self.from_date_entry))
-        self.to_date_entry.bind("<FocusIn>", lambda e: self.set_active_date_field(self.to_date_entry))
-        self.calendar.bind("<<CalendarSelected>>", self.handle_calendar_date_select)
 
     def display(self, previous_window=None):
         if previous_window is not None:
@@ -117,24 +107,14 @@ class AnnouncementsScreen:
 
     def go_back(self):
         new_window = tk.Toplevel(self.root)
-        new_window.protocol('WM_DELETE_WINDOW', self.root.destroy)
-        main_menu_screen = MainMenuScreen.MainMenuScreen(top=new_window, root=self.root, username=self.username)
+        main_menu_screen = MainMenuScreen.MainMenuScreen(top=new_window, root=self.root)
         main_menu_screen.display(previous_window=self.top)
-
-    def set_active_date_field(self, field):
-        self.active_date_field = field
-
-    def handle_calendar_date_select(self, event):
-        selected_date = self.calendar.get_date()
-        if self.active_date_field:
-            self.active_date_field.delete(0, tk.END)
-            self.active_date_field.insert(0, selected_date)
 
     def update_interestedusers(self, ann_id):
         db = DBManager.DBManager(database='petato_db')
         db.connect()
         try:
-            query = "INSERT INTO interested_users (int_ann, int_user) VALUES (%s, %s)"
+            query = "INSERT INTO interested_users (int_an, int_user) VALUES (%s, %s)"
             cursor = db.connection.cursor()
             cursor.execute(query, (ann_id, self.username))
             db.connection.commit()
@@ -147,8 +127,8 @@ class AnnouncementsScreen:
     def search_announcements(self):
         pet_filters = []
         type_filters = []
-        from_date = self.from_date_entry.get()
-        to_date = self.to_date_entry.get()
+        from_date = self.start_date.get_date().strftime('%Y-%m-%d')
+        to_date = self.end_date.get_date().strftime('%Y-%m-%d')
 
         if self.che50.get() == 1:
             pet_filters.append('DOG')
@@ -196,9 +176,6 @@ class AnnouncementsScreen:
                 container = tk.Frame(scroll_frame, bg="#ffffff", bd=1, relief="solid", padx=10, pady=10)
                 container.grid(row=idx, column=0, sticky='ew', pady=5, padx=5)
                 container.grid_columnconfigure(0, weight=1)
-                container.grid_columnconfigure(1, weight=0)
-                container.grid_columnconfigure(2, weight=0)
-                container.grid_columnconfigure(3, weight=0)
 
                 title_label = tk.Label(container, text=title, font=("Segoe UI", 10, "bold"), anchor='w', bg="#ffffff")
                 title_label.grid(row=0, column=0, sticky='ew', padx=(20, 0))
@@ -227,12 +204,8 @@ class AnnouncementsScreen:
                         cursor="hand2"
                     )
                     username_label.grid(row=1, column=0, columnspan=4, sticky="w", padx=(20, 0), pady=(3, 0))
-
                     def open_profile(event, user=ann_user):
-                        new_top = tk.Toplevel(self.root)
-                        new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
-                        OtherProfile.OtherProfile(new_top, self.root, user).display(self.top)
-
+                        OtherProfile.OtherProfile(self.top, user)
                     username_label.bind("<Button-1>", open_profile)
 
                 if ann_type == 'ADOPTION':
@@ -271,7 +244,7 @@ class AnnouncementsScreen:
 if __name__ == '__main__':
     root = tk.Tk()
     root.withdraw()
+    root.protocol('WM_DELETE_WINDOW', root.destroy)
     top = tk.Toplevel(root)
-    top.protocol('WM_DELETE_WINDOW', root.destroy)
     window = AnnouncementsScreen(top, root, username="giwrgos2")
     root.mainloop()
