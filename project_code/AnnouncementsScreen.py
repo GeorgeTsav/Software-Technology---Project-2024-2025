@@ -2,7 +2,7 @@ import sys
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.constants import *
-from tkcalendar import Calendar, DateEntry
+from tkcalendar import DateEntry
 from datetime import datetime
 import os.path
 import DBManager
@@ -124,6 +124,54 @@ class AnnouncementsScreen:
             cursor.close()
             db.close()
 
+    def retrieveinformation(self, parent, ann_user, ann_id):
+        
+        message_button = tk.Button(
+            parent, text="Message", bg="#2846a7", fg="white", font=("Segoe UI", 9),
+            command=lambda ann_user=ann_user: MessageTextScreen.MessageTextScreen(self.top, self.username, ann_user)
+        )
+        message_button.grid(row=0, column=3, sticky='e', padx=(5, 10))
+
+        username_label = tk.Label(
+            parent,
+            text=f"Username: {ann_user}",
+            font=("Segoe UI", 9, "underline"),
+            fg="blue",
+            bg="#ffffff",
+            cursor="hand2"
+        )
+        username_label.grid(row=0, column=0, sticky="w", padx=(20, 0))
+
+        def open_profile(event, user=ann_user):
+            OtherProfile.OtherProfile(self.top, user)
+
+        username_label.bind("<Button-1>", open_profile)
+
+    def retrievedetails(self, parent, ann_type, adopt_description, host_start_date, host_end_date):
+        
+        description = adopt_description if ann_type == 'ADOPTION' else f"Host start date: {host_start_date}  Host end date: {host_end_date}"
+
+        desc_label = tk.Label(parent, text=description, wraplength=520, justify='left', bg="#ffffff",
+                              font=("Segoe UI", 9))
+        desc_label.grid(row=1, column=0, columnspan=4, sticky='w', pady=(8, 0))
+        desc_label.grid_remove()
+
+        toggle_button = tk.Button(
+            parent, text="More...", font=("Segoe UI", 9, "italic"),
+            bg="#ffffff", bd=0, fg="blue", cursor="hand2"
+        )
+        toggle_button.grid(row=2, column=0, columnspan=4, sticky="w", pady=(5, 0), padx=(20, 0))
+
+        def toggle_description():
+            if desc_label.winfo_viewable():
+                desc_label.grid_remove()
+                toggle_button.config(text="More...")
+            else:
+                desc_label.grid()
+                toggle_button.config(text="Less...")
+
+        toggle_button.config(command=toggle_description)
+
     def search_announcements(self):
         pet_filters = []
         type_filters = []
@@ -178,7 +226,7 @@ class AnnouncementsScreen:
                 container.grid_columnconfigure(0, weight=1)
 
                 title_label = tk.Label(container, text=title, font=("Segoe UI", 10, "bold"), anchor='w', bg="#ffffff")
-                title_label.grid(row=0, column=0, sticky='ew', padx=(20, 0))
+                title_label.grid(row=0, column=0, sticky='w', padx=(20, 0))
 
                 date_label = tk.Label(container, text=str(date), font=("Segoe UI", 9), anchor='e', bg="#ffffff")
                 date_label.grid(row=0, column=1, sticky='e', padx=(10, 10))
@@ -189,50 +237,9 @@ class AnnouncementsScreen:
                 star_button.grid(row=0, column=2, sticky='e', padx=(0, 10))
 
                 if ann_user:
-                    message_button = tk.Button(
-                        container, text="Message", bg="#2846a7", fg="white", font=("Segoe UI", 9),
-                        command=lambda ann_user=ann_user: MessageTextScreen.MessageTextScreen(self.top, self.username, ann_user)
-                    )
-                    message_button.grid(row=0, column=3, sticky='e', padx=(5, 10))
+                    self.retrieveinformation(container, ann_user, ann_id)
 
-                    username_label = tk.Label(
-                        container,
-                        text=f"Username: {ann_user}",
-                        font=("Segoe UI", 9, "underline"),
-                        fg="blue",
-                        bg="#ffffff",
-                        cursor="hand2"
-                    )
-                    username_label.grid(row=1, column=0, columnspan=4, sticky="w", padx=(20, 0), pady=(3, 0))
-                    def open_profile(event, user=ann_user):
-                        OtherProfile.OtherProfile(self.top, user)
-                    username_label.bind("<Button-1>", open_profile)
-
-                if ann_type == 'ADOPTION':
-                    description = adopt_description 
-                elif ann_type == 'HOST':
-                    description = f"Host start date: {host_start_date} Host end date: {host_end_date}"
-
-                desc_label = tk.Label(container, text=description, wraplength=520, justify='left', bg="#ffffff",
-                                      font=("Segoe UI", 9))
-                desc_label.grid(row=2, column=0, columnspan=4, sticky='w', pady=(8, 0))
-                desc_label.grid_remove()
-
-                toggle_button = tk.Button(
-                    container, text="More...", font=("Segoe UI", 9, "italic"),
-                    bg="#ffffff", bd=0, fg="blue", cursor="hand2"
-                )
-                toggle_button.grid(row=3, column=0, columnspan=4, sticky="w", pady=(5, 0), padx=(20, 0))
-
-                def toggle_description(label=desc_label, button=toggle_button):
-                    if label.winfo_viewable():
-                        label.grid_remove()
-                        button.config(text="More...")
-                    else:
-                        label.grid()
-                        button.config(text="Less...")
-
-                toggle_button.config(command=toggle_description)
+                self.retrievedetails(container, ann_type, adopt_description, host_start_date, host_end_date)
 
             db_cursor.close()
             db.close()
