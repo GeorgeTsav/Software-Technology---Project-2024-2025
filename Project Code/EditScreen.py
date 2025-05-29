@@ -69,18 +69,19 @@ class EditScreen:
         if result:
             ann_title, ann_type, ann_pet, adopt_description, host_start_date, host_end_date = result
             self.announcement_type.set(ann_type)
+            self.TCombobox1.configure(state="disabled")
             self.pet_type.set(ann_pet)
             self.Text1.insert("1.0", ann_title)
 
             if ann_type == 'HOST':
-                self.Entry1.set_date(host_start_date)
-                self.Entry1_1.set_date(host_end_date)
                 self.Entry1.config(state='normal')
                 self.Entry1_1.config(state='normal')
+                self.Entry1.set_date(host_start_date)
+                self.Entry1_1.set_date(host_end_date)
                 self.Text2.config(state='disabled')
             else:
                 self.Text2.insert("1.0", adopt_description or "")
-                self.Text2.config(state='normal')
+                
 
     def on_type_change(self, event=None):
         if self.announcement_type.get() == 'HOST':
