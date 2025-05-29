@@ -115,7 +115,7 @@ class AnnouncementsScreen:
         db = DBManager.DBManager(database='petato_db')
         db.connect()
         try:
-            query = "INSERT INTO interested_users (int_an, int_user) VALUES (%s, %s)"
+            query = "INSERT INTO interested_users (int_ann, int_user) VALUES (%s, %s)"
             cursor = db.connection.cursor()
             cursor.execute(query, (ann_id, self.username))
             db.connection.commit()
