@@ -231,7 +231,7 @@ class AnnouncementsScreen:
                     def open_profile(event, user=ann_user):
                         new_top = tk.Toplevel(self.root)
                         new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
-                        OtherProfile.OtherProfile(new_top, self.root, user).display(self.top)
+                        OtherProfile.OtherProfile(new_top, self.root, user, self.username).display(self.top)
 
                     username_label.bind("<Button-1>", open_profile)
 

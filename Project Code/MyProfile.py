@@ -9,6 +9,7 @@ import MainMenuScreen
 import MyMessagesScreen
 import MyAnnouncementsScreen
 import PersonalDiaryScreen
+import MyAppointmentsScreen
 
 _location = os.path.dirname(__file__)
 
@@ -180,6 +181,7 @@ class MyProfile:
         self.MyAppointmentsbutton.configure(highlightbackground="#d9d9d9")
         self.MyAppointmentsbutton.configure(highlightcolor="#000000")
         self.MyAppointmentsbutton.configure(text='''My Appointments''')
+        self.MyAppointmentsbutton.configure(command=self.openMyAppointments)
 
         self.PersonalDiaryButton = tk.Button(self.MyProfileframe)
         self.PersonalDiaryButton.place(relx=0.4, rely=0.908, height=26, width=130)
@@ -273,6 +275,9 @@ class MyProfile:
         new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
         PersonalDiaryScreen.PersonalDiaryScreen(new_top, self.root, self.username).display(self.top)
 
+    def openMyAppointments(self):
+        new_top = tk.Toplevel(self.root)
+        MyAppointmentsScreen.MyAppointmentsScreen(new_top, self.root, self.username)
 
 
 if __name__ == '__main__':

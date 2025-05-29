@@ -21,25 +21,22 @@ _tabbg2 = 'gray40'
 
 
 class ReviewScreen:
-    def __init__(self, top=None, username="", logged_in_user=""):
-        
-        
-
-        top.geometry("680x464+485+82")
-        top.minsize(120, 1)
-        top.maxsize(1540, 845)
-        top.resizable(1,  1)
-        top.title("Petato")
-        top.configure(background="#c0c0c0")
-        top.configure(highlightbackground="#d9d9d9")
-        top.configure(highlightcolor="#0000ff")
-
+    def __init__(self, top=None, username=None, logged_in_user=None):
         self.top = top
         self.username = username 
         self.logged_in_user = logged_in_user 
 
-        self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
-        top.configure(menu = self.menubar)
+        self.top.geometry("680x464+485+82")
+        self.top.minsize(120, 1)
+        self.top.maxsize(1540, 845)
+        self.top.resizable(1,  1)
+        self.top.title("Petato")
+        self.top.configure(background="#c0c0c0")
+        self.top.configure(highlightbackground="#d9d9d9")
+        self.top.configure(highlightcolor="#0000ff")
+
+        self.menubar = tk.Menu(self.top, font="TkMenuFont", bg=_bgcolor, fg=_fgcolor)
+        self.top.configure(menu=self.menubar)
 
         self.reviewscreenframe = tk.Frame(self.top)
         self.reviewscreenframe.place(relx=0.018, rely=0.022, relheight=0.966
@@ -129,7 +126,6 @@ class ReviewScreen:
         self.addreviewbutton.configure(text='''Add Review''')
         self.addreviewbutton.configure(command=self.add_review)
 
-
     def set_stars(self, stars):
         self.selected_stars = stars
 
@@ -149,10 +145,7 @@ class ReviewScreen:
             else:
                 star_buttons[i].configure(text='☆')  # full star showing the remaining stars
 
-
-
    # check if the user has submitted stars and review doen not surpass 100 words. then add to DB
-
     def add_review(self):
         review_text = self.Reviewtext.get("1.0", tk.END).strip()
 

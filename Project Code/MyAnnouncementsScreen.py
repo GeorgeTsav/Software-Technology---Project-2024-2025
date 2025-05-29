@@ -98,11 +98,12 @@ class MyAnnouncementsScreen:
         self.searchAnnouncements()
 
     class MyAnnouncementWidget(tk.Frame):
-        def __init__(self, master, ann_title, ann_id, *args, **kwargs):
+        def __init__(self, master, root, ann_title, ann_id, *args, **kwargs):
             super().__init__(master, *args, **kwargs)
 
             self.ann_id = ann_id
             self.ann_title = ann_title
+            self.root = root
 
             self.configure(bg="#ffffff", relief="ridge", bd=1)
             tk.Label(self, text=ann_title, font=("Segoe UI", 12, "bold"), bg="#ffffff").pack(side=tk.LEFT, padx=10)
@@ -110,7 +111,7 @@ class MyAnnouncementsScreen:
             tk.Button(self, text="Interested", activebackground="#0080ff", command=self.openInterested).pack(side=tk.LEFT, padx=10)
 
         def openInterested(self):
-            IntrestedScreen.InterestedScreen(tk.Toplevel(), self.ann_id)
+            IntrestedScreen.InterestedScreen(tk.Toplevel(), self.root, self.ann_id)
 
         def showDetails(self):
             pass
@@ -135,7 +136,7 @@ class MyAnnouncementsScreen:
         # Δημιουργεί ένα MyAnnouncementWidget για κάθε ανακοίνωση
         if results:
             for ann in results:
-                widget = self.MyAnnouncementWidget(self.list_frame, ann[1], ann[0])
+                widget = self.MyAnnouncementWidget(self.list_frame, self.root, ann[1], ann[0])
                 widget.pack(fill=tk.X, pady=4, padx=4)
             
             db_cursor.close()

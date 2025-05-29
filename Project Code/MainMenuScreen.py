@@ -8,6 +8,7 @@ import os.path
 import MyProfile
 import Make_Search_Announcemnt_Screen
 import eshopScreen
+import MakeAppointmentScreen
 
 _location = os.path.dirname(__file__)
 _debug = True
@@ -57,6 +58,7 @@ class MainMenuScreen:
         self.MakeApointmenetButton.configure(highlightbackground="#d9d9d9")
         self.MakeApointmenetButton.configure(highlightcolor="#000000")
         self.MakeApointmenetButton.configure(text='''Make an Apointment''')
+        self.MakeApointmenetButton.configure(command=self.openMakeAppointmentScreen)
 
         self.AnnouncementsButton = tk.Button(self.MenuBarFrame)
         self.AnnouncementsButton.place(relx=0.271, rely=0.295, height=26
@@ -135,6 +137,11 @@ class MainMenuScreen:
         new_top = tk.Toplevel(self.root)
         new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
         Make_Search_Announcemnt_Screen.Make_Search_Announcemnts_Screen(new_top, self.root, self.username).display(self.top)
+
+    def openMakeAppointmentScreen(self):
+        new_top = tk.Toplevel(self.root)
+        new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
+        MakeAppointmentScreen.MakeAppointmentScreen(new_top, self.root, self.username).display(self.top)
 
     def open_eshopScreen(self):
         new_top = tk.Toplevel(self.root)

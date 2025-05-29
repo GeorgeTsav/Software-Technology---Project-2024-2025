@@ -175,9 +175,12 @@ class OtherProfile:
      # Κλείνει το παράθυρο του MyProfile
    
     def go_back(self):
-      new_top = tk.Toplevel(self.root)
-      new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
-      MainMenuScreen.MainMenuScreen(new_top, self.root, self.logged_in_user).display(self.top)
+      if self.root is not None:
+        new_top = tk.Toplevel(self.root)
+        new_top.protocol('WM_DELETE_WINDOW', self.root.destroy)
+        MainMenuScreen.MainMenuScreen(new_top, self.root, self.logged_in_user).display(self.top)
+      elif self.top is not None:
+         self.top.destroy()
 
     #for pop up review screen
     def open_review_screen(self):
