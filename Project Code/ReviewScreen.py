@@ -150,11 +150,11 @@ class ReviewScreen:
         review_text = self.Reviewtext.get("1.0", tk.END).strip()
 
         if len(review_text.split()) > 100:
-            MessageScreen.MessageScreen().display("Η αξιολόγηση δεν μπορεί να ξεπερνά τις 100 λέξεις.")
+            MessageScreen.MessageScreen().display("The review cannot exceed 100 words.")
             return
 
         if self.selected_stars == 0:
-            MessageScreen.MessageScreen().display("Παρακαλώ επιλέξτε αστέρια πριν προσθέσετε την αξιολόγηση.")
+            MessageScreen.MessageScreen().display("Please select stars before adding the review.")
             return
 
         rev_writer = self.logged_in_user  # username of the user making the review
@@ -167,11 +167,11 @@ class ReviewScreen:
 
         # if everything done correctly reset text and stars
         if success:
-            MessageScreen.MessageScreen().display("Η αξιολόγηση προστέθηκε με επιτυχία!")
+            MessageScreen.MessageScreen().display("The review was added successfully!")
             self.Reviewtext.delete("1.0", tk.END)
             self.set_stars(0)
         else:
-            MessageScreen.MessageScreen().display("Προέκυψε σφάλμα κατά την αποθήκευση της αξιολόγησης.")
+            MessageScreen.MessageScreen().display("An error occurred while saving the review.")
 
 
 
