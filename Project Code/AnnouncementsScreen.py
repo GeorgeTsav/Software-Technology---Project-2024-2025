@@ -3,8 +3,8 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.constants import *
 from tkcalendar import DateEntry
-from datetime import datetime
 import os.path
+
 import DBManager
 import MessageScreen
 import MessageTextScreen
@@ -247,7 +247,7 @@ class AnnouncementsScreen:
         else:
             db_cursor.close()
             db.close()
-            MessageScreen.MessageScreen.display(self.top,"There are no announcements")
+            MessageScreen.MessageScreen().display("There are no announcements")
 
 
 if __name__ == '__main__':

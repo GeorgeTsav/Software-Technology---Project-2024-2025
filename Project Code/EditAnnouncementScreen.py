@@ -124,11 +124,12 @@ class EditAnnouncementScreen:
         self.top.destroy()
 
 
+
 if __name__ == '__main__':
     root = tk.Tk()
     root.withdraw()
     top = tk.Toplevel(root)
     top.protocol('WM_DELETE_WINDOW', root.destroy)
-    window = EditAnnouncementScreen(top, ann_id=3)
+    window = EditAnnouncementScreen(top, ann_id=16)
     root.mainloop()
 
