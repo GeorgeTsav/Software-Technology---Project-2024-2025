@@ -30,6 +30,9 @@ class MakeAnnouncementScreen:
         self.top.resizable(1, 1)
         self.top.title("Petato")
         self.top.configure(background="#d9d9d9")
+        
+        self.title_label = tk.Label(top, text="Make Announcement", font=("Segoe UI", 20, "bold"), bg=_bgcolor, fg="black")
+        self.title_label.pack(side="top", pady=10)
 
         self.announcement_type = tk.StringVar()
         self.pet_type = tk.StringVar()
@@ -80,8 +83,8 @@ class MakeAnnouncementScreen:
         self.Button1 = tk.Button(self.Frame1, text='Make', background="#0080ff", command=self.upload_announcement)
         self.Button1.place(relx=0.022, rely=0.906, height=26, width=60)
 
-        # Κουμπί Upload
-        self.Button2 = tk.Button(self.Frame1, text='Upload', background="#0080ff", command=self.clear_fields)
+        # Κουμπί Clear All
+        self.Button2 = tk.Button(self.Frame1, text='Clear all', background="#0080ff", command=self.clear_fields)
         self.Button2.place(relx=0.154, rely=0.906, height=26, width=60)
 
         self.db = DBManager.DBManager(host='localhost', user='root', password='', database='petato_db')
@@ -105,8 +108,8 @@ class MakeAnnouncementScreen:
         ann_type = self.announcement_type.get()
         ann_pet = self.pet_type.get()
         ann_title = self.Text1.get("1.0", tk.END).strip()
-        host_start_date = self.Entry1.get_date().strftime('%d/%m/%Y') if ann_type == 'HOST' else None
-        host_end_date = self.Entry1_1.get_date().strftime('%d/%m/%Y') if ann_type == 'HOST' else None
+        host_start_date = self.Entry1.get_date().strftime('%Y-%m-%d') if ann_type == 'HOST' else None
+        host_end_date = self.Entry1_1.get_date().strftime('%Y-%m-%d') if ann_type == 'HOST' else None
         adopt_description = self.Text2.get("1.0", "end-1c") if ann_type == 'ADOPTION' else None
 
         query = """
