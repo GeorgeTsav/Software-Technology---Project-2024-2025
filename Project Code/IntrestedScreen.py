@@ -114,13 +114,16 @@ class InterestedScreen:
 
             db.execute_query(
                 "DELETE FROM interested_users WHERE int_user = %s AND int_ann = %s", 
-                (self.username, self.ann_id)
+                (self.int_user, self.ann_id)
             )
             db.connection.commit()
             
             db.close()
 
-            SendMessage.SendMessage(f"You have been ignored by the owner of the announcement {self.ann_id}.", self.username).sendMsg()
+            SendMessage.SendMessage(
+                message=f"You have been ignored by the owner of the announcement {self.ann_id}.", 
+                receiver=self.int_user
+            ).sendMsg()
 
             self.destroy()
         
